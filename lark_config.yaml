@@ -1,0 +1,13 @@
+# OpenClaw 飞书集成配置文件
+# 请将敏感信息替换为实际值
+
+channels:
+  lark:
+    enabled: true
+    type: lark
+    app_id: "YOUR_APP_ID_HERE"
+    app_secret: "YOUR_APP_SECRET_HERE"
+    encrypt_key: ""  # 可选
+    verification_token: "YOUR_VERIFICATION_TOKEN_HERE"
+    port: 8080  # 用于接收飞书回调的端口
+    webhook_path: "/lark/webhook"
