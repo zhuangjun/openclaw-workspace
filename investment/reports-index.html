@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投资研究报告 | Friday</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #111820;
+            --bg-card: #161b22;
+            --border: #21262d;
+            --border-hover: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #00d4aa;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-orange: #f0883e;
+            --accent-red: #f85149;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 0 24px;
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.3em;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: var(--bg-card);
+        }
+        
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 96px 24px 48px;
+        }
+        
+        .header-section {
+            margin-bottom: 32px;
+        }
+        
+        .header-section h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .header-section p {
+            color: var(--text-secondary);
+        }
+        
+        .reports-grid {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .report-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .report-card:hover {
+            border-color: var(--border-hover);
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .report-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            flex-shrink: 0;
+        }
+        
+        .report-content {
+            flex: 1;
+        }
+        
+        .report-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+        
+        .report-meta {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        
+        .report-date {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            text-align: right;
+            padding-right: 16px;
+        }
+        
+        .report-arrow {
+            color: var(--text-muted);
+            font-size: 1.2em;
+            transition: transform 0.2s;
+        }
+        
+        .report-card:hover .report-arrow {
+            transform: translateX(4px);
+            color: var(--accent);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-secondary);
+        }
+        
+        .error {
+            text-align: center;
+            padding: 48px;
+            color: var(--accent-red);
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-secondary);
+        }
+        
+        .refresh-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .report-count {
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+            font-size: 0.9em;
+            border-top: 1px solid var(--border);
+            margin-top: 48px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/Friday/" class="logo">
+                <span>Friday</span>
+            </a>
+            <div class="nav-links">
+                <a href="/Friday/" class="nav-link">概览</a>
+                <a href="/Friday/portfolio/" class="nav-link">模拟盘</a>
+                <a href="/Friday/reports/" class="nav-link active">研究报告</a>
+                <a href="/Friday/task/" class="nav-link">任务监控</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="header-section">
+            <h1>📑 投资研究报告</h1>
+            <p>基于 Gemini Deep Research 的深度分析，每日自动更新</p>
+        </div>
+        
+        <div class="header-actions">
+            <span class="report-count" id="reportCount">加载中...</span>
+            <button class="refresh-btn" onclick="loadReports()">🔄 刷新</button>
+        </div>
+
+        <div class="reports-grid" id="reportsList">
+            <div class="loading">正在加载报告列表...</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Friday AI Investment System &copy; 2026</p>
+        <p style="margin-top: 8px; font-size: 0.85em;">数据仅供参考，不构成投资建议</p>
+    </footer>
+
+    <script>
+        // API 基础路径
+        const API_BASE = '/Friday/api';
+        
+        // 加载报告列表
+        async function loadReports() {
+            const container = document.getElementById('reportsList');
+            const countEl = document.getElementById('reportCount');
+            
+            container.innerHTML = '<div class="loading">正在加载报告列表...</div>';
+            countEl.textContent = '加载中...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/reports/list`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || '加载失败');
+                }
+                
+                const reports = data.reports || [];
+                
+                // 更新计数
+                countEl.textContent = `共 ${reports.length} 份报告`;
+                
+                if (reports.length === 0) {
+                    container.innerHTML = '<div class="empty">暂无报告</div>';
+                    return;
+                }
+                
+                // 渲染报告列表
+                container.innerHTML = reports.map(report => `
+                    <a href="${report.file}" class="report-card">
+                        <div class="report-icon">${report.icon || '📄'}</div>
+                        <div class="report-content">
+                            <div class="report-title">${report.title || report.file}</div>
+                            <div class="report-meta">${report.meta || '投资研究报告'}</div>
+                        </div>
+                        <div class="report-date">${report.date || ''}</div>
+                        <div class="report-arrow">→</div>
+                    </a>
+                `).join('');
+                
+            } catch (err) {
+                console.error('加载报告失败:', err);
+                container.innerHTML = `
+                    <div class="error">
+                        <p>加载失败: ${err.message}</p>
+                        <button class="refresh-btn" onclick="loadReports()" style="margin-top: 16px;">重试</button>
+                    </div>
+                `;
+                countEl.textContent = '加载失败';
+            }
+        }
+        
+        // 页面加载时自动加载
+        document.addEventListener('DOMContentLoaded', loadReports);
+    </script>
+</body>
+</html>
