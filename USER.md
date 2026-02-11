@@ -2,11 +2,17 @@
 
 *Learn about the person you're helping. Update this as you go.*
 
-- **Name:** 
-- **What to call them:** 
+- **Name:** 小丹
+- **What to call them:** 小丹 
 - **Pronouns:** *(optional)*
 - **Timezone:** 
 - **Notes:** 
+
+## 联系方式
+
+| 渠道 | 标识符 |
+|------|--------|
+| Telegram | Chat ID: `682227813` (用户名: @danielzhuang) | 
 
 ## Context
 
@@ -20,3 +26,16 @@
 ---
 
 The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
+
+## 待配置清单
+
+| 项目 | 状态 | 优先级 | 说明 |
+|------|------|--------|------|
+| Gemini API Key | ⏳ 待配置 | 高 | Kimi 限流时的 fallback 模型 |
+| Claude API Key | ⏳ 待配置 | 中 | 备用选项，深度推理任务 |
+| OpenAI API Key | ⏳ 待配置 | 低 | 可选，GPT-4o 备用 |
+
+### 配置计划
+1. **先配 Gemini**（Google AI Studio 免费额度充足）
+2. **测试 fallback** 效果
+3. **视情况加 Claude**

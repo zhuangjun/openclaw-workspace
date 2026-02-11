@@ -1,0 +1,11 @@
+# OpenClaw投资定时任务配置
+# 使用GLM-4.7模型生成投资分析
+
+# 每日投资晨报 - 工作日早7点
+0 7 * * 1-5 cd /home/ubuntu/stock-value-analyzer && /home/ubuntu/stock-value-analyzer/backend/venv/bin/python scripts/daily_market_report_task.py >> logs/daily_market_report.log 2>&1
+
+# 戴维斯双击扫描 - 每周二、五晚8点
+0 20 * * 2,5 cd /home/ubuntu/stock-value-analyzer && /home/ubuntu/stock-value-analyzer/backend/venv/bin/python scripts/davis_double_scan_task.py >> logs/davis_double_scan.log 2>&1
+
+# 比特币追踪 - 每天早8点和晚8点
+0 8,20 * * * cd /home/ubuntu/stock-value-analyzer && /home/ubuntu/stock-value-analyzer/backend/venv/bin/python scripts/bitcoin_tracker_task.py >> logs/bitcoin_tracker.log 2>&1

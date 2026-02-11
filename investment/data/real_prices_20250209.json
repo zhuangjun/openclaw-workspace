@@ -1,0 +1,50 @@
+{
+  "MSFT": {
+    "price": 401.14,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:41.137013"
+  },
+  "TSLA": {
+    "price": 411.11,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:41.564288"
+  },
+  "GOOGL": {
+    "price": 322.86,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:41.920658"
+  },
+  "NVDA": {
+    "price": 185.41,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:42.320436"
+  },
+  "BTC": {
+    "price": 70331.45,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:42.656116"
+  },
+  "3690.HK": {
+    "price": 91.35,
+    "currency": "HKD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:43.224535"
+  },
+  "GLD": {
+    "price": 455.46,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:43.843939"
+  },
+  "XLU": {
+    "price": 43.35,
+    "currency": "USD",
+    "source": "Yahoo Finance",
+    "timestamp": "2026-02-09T10:15:44.214345"
+  }
+}

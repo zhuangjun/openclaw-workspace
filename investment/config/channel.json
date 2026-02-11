@@ -1,0 +1,13 @@
+{
+  "channel_id": "-1002447435917",
+  "channel_username": "@danielinvest001",
+  "bot_token": "7618151752:AAHZE-7EbNmuu_ZJOmLdi4jyVPDByq8Jeqo",
+  "purpose": "模拟投资组合交易通知",
+  "created": "2026-02-09",
+  "notify_on": [
+    "trade_executed",
+    "stop_loss_triggered",
+    "weekly_review",
+    "risk_alert"
+  ]
+}

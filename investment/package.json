@@ -1,0 +1,8 @@
+{
+  "name": "Friday Portfolio",
+  "version": "1.0.0",
+  "description": "模拟投资组合展示 - 目标年化20%+",
+  "author": "Friday AI",
+  "start_date": "2026-02-09",
+  "initial_capital": 1000000
+}

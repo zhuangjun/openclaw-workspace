@@ -1,0 +1,306 @@
+[
+  {
+    "id": 1,
+    "date": "2026-02-09",
+    "time": "09:30 EST",
+    "symbol": "MSFT",
+    "name": "Microsoft",
+    "direction": "买入",
+    "price": 401.14,
+    "currency": "USD",
+    "shares": 70,
+    "amount_cny": 204982,
+    "ratio": 20.9,
+    "style": "核心-大仓稳健",
+    "context": {
+      "market_sentiment": "VIX 15低位，科技股分化，微软因Azure增速放缓回调",
+      "trigger": "晨报指出微软回调-5%，Morningstar公允价值$600，当前$413有45%上行空间",
+      "alternatives": "考虑过NVDA，但选择MSFT因估值更合理、确定性更高"
+    },
+    "logic": {
+      "background": "AI投资进入第二阶段，从基建转向应用，微软Copilot变现清晰",
+      "reasons": [
+        "Azure短期增速放缓引发回调，但长期AI逻辑未变",
+        "Copilot业务增长强劲，AI变现路径清晰",
+        "Morningstar公允价值$600，当前有50%+上行空间",
+        "属于高确定性核心持仓，符合大仓稳健定位"
+      ],
+      "target": "$500（+20%），长期$600（+45%）",
+      "stop_loss": "$370（-11%）",
+      "holding_period": "6-12个月",
+      "risks": "AI竞争加剧、云业务持续放缓"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938330",
+      "old_price": 415.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 2,
+    "date": "2026-02-09",
+    "time": "09:30 EST",
+    "symbol": "TSLA",
+    "name": "Tesla",
+    "direction": "买入",
+    "price": 411.11,
+    "currency": "USD",
+    "shares": 50,
+    "amount_cny": 150055,
+    "ratio": 14.75,
+    "style": "核心-大仓稳健",
+    "context": {
+      "market_sentiment": "Q4财报季，特斯拉超预期",
+      "trigger": "晨报指出Tesla Q4财报超预期，EPS $0.50 vs $0.40预期，Physical AI叙事核心",
+      "alternatives": "与NVDA对比，TSLA估值相对合理且叙事独特"
+    },
+    "logic": {
+      "background": "AI从数字世界走向物理世界，Robotaxi+FSD是下一代AI",
+      "reasons": [
+        "Q4财报超预期，交付量增长",
+        "Physical AI叙事核心，与NVDA并列为长期赢家",
+        "Robotaxi预期提供爆发潜力",
+        "MAG7中唯一跑赢标普的成员之一"
+      ],
+      "target": "$500（+22%），长期$600（+46%）",
+      "stop_loss": "$350（-15%）",
+      "holding_period": "6-12个月",
+      "risks": "交付不及预期、自动驾驶进展慢"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938340",
+      "old_price": 410.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 3,
+    "date": "2026-02-09",
+    "time": "09:30 EST",
+    "symbol": "GOOGL",
+    "name": "Alphabet",
+    "direction": "买入",
+    "price": 322.86,
+    "currency": "USD",
+    "shares": 25,
+    "amount_cny": 58921,
+    "ratio": 3.5,
+    "style": "核心-大仓稳健",
+    "context": {
+      "market_sentiment": "GOOGL财报后曾因AI capex翻倍大跌",
+      "trigger": "自主研究发现GOOGL估值相对合理，广告+AI云双驱动",
+      "alternatives": "与MSFT相比，GOOGL估值更低，但确定性稍弱"
+    },
+    "logic": {
+      "background": "广告市场复苏，AI云竞争加剧",
+      "reasons": [
+        "广告业务稳健，YouTube增长强劲",
+        "AI capex虽高但变现路径清晰（Bard、Workspace AI）",
+        "估值相对MAG7其他成员合理",
+        "小仓位试水，回调后加仓"
+      ],
+      "target": "$230（+18%）",
+      "add_position": "$180以下加仓至8%",
+      "holding_period": "6-12个月",
+      "risks": "AI投资回报不及预期、监管压力"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938344",
+      "old_price": 195.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 4,
+    "date": "2026-02-09",
+    "time": "08:00 UTC",
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "direction": "买入",
+    "price": 70331.45,
+    "currency": "USD",
+    "shares": 0.12,
+    "share_unit": "枚",
+    "amount_cny": 61610,
+    "ratio": 8.25,
+    "style": "卫星-小仓爆发",
+    "context": {
+      "market_sentiment": "加密恐惧贪婪指数仅6，极度恐慌",
+      "trigger": "晨报指出加密恐惧贪婪指数6，极度恐慌区域，可能是配置窗口",
+      "alternatives": "考虑过ETH，选择BTC因流动性更好、确定性更高"
+    },
+    "logic": {
+      "background": "美联储利率维持高位，但降息预期仍在；ETF资金持续流入",
+      "reasons": [
+        "恐惧贪婪指数6，历史低位区域，情绪冰点",
+        "极度恐慌往往预示短期反弹或中期配置机会",
+        "作为大类资产配置的一部分，分散风险",
+        "小仓位博取高弹性收益"
+      ],
+      "target": "$120,000（+25%）",
+      "stop_loss": "$80,000（-17%）",
+      "holding_period": "3-6个月",
+      "risks": "监管打击、流动性收紧"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938347",
+      "old_price": 96000,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 5,
+    "date": "2026-02-09",
+    "time": "09:30 EST",
+    "symbol": "NVDA",
+    "name": "Nvidia",
+    "direction": "买入",
+    "price": 185.41,
+    "currency": "USD",
+    "shares": 15,
+    "amount_cny": 20302,
+    "ratio": 4.1,
+    "style": "卫星-小仓爆发",
+    "context": {
+      "market_sentiment": "NVDA近期回调，AI芯片竞争担忧",
+      "trigger": "自主研究发现NVDA回调至MA50附近，估值相对合理",
+      "alternatives": "与AMD对比，NVDA护城河更深"
+    },
+    "logic": {
+      "background": "AI基建投资持续，但市场开始质疑ROI；竞争加剧",
+      "reasons": [
+        "回调至关键技术支撑位（MA50）",
+        "数据中心需求持续强劲，护城河深厚",
+        "小仓位博取AI芯片龙头反弹",
+        "微软/谷歌capex指引强劲，利好芯片需求"
+      ],
+      "target": "$450（+18%）",
+      "stop_loss": "$330（-13%）",
+      "holding_period": "2-4个月",
+      "risks": "AI泡沫破裂、竞争加剧（AMD、自研芯片）"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938350",
+      "old_price": 380.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 6,
+    "date": "2026-02-09",
+    "time": "09:30 HKT",
+    "symbol": "3690.HK",
+    "name": "美团",
+    "direction": "买入",
+    "price": 91.35,
+    "currency": "HKD",
+    "shares": 400,
+    "amount_cny": 34347,
+    "ratio": 6.3,
+    "style": "卫星-小仓爆发",
+    "context": {
+      "market_sentiment": "南向资金持续流入，港股科技股回购强劲",
+      "trigger": "晨报指出美团回购281亿港元显信心，南向资金流入",
+      "alternatives": "与腾讯对比，美团估值修复空间更大"
+    },
+    "logic": {
+      "background": "港股估值修复进行中，内地政策支持",
+      "reasons": [
+        "外卖+即时零售双轮驱动，基本面稳健",
+        "南向资金持续流入，流动性改善",
+        "回购281亿港元显示管理层信心",
+        "盈利拐点临近，业绩确定性提升",
+        "港股估值相对美股仍有折价"
+      ],
+      "target": "HK$210（+24%）",
+      "stop_loss": "HK$145（-15%）",
+      "holding_period": "3-6个月",
+      "risks": "外卖竞争加剧、宏观经济下滑"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938352",
+      "old_price": 170.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 7,
+    "date": "2026-02-09",
+    "time": "09:30 EST",
+    "symbol": "GLD",
+    "name": "黄金ETF",
+    "direction": "买入",
+    "price": 455.46,
+    "currency": "USD",
+    "shares": 35,
+    "amount_cny": 116370,
+    "ratio": 5.5,
+    "style": "防守型-抗跌",
+    "context": {
+      "market_sentiment": "VIX 15低位，但需提前布局防守",
+      "trigger": "用户要求攻守兼备，当前0%防守仓位需补足",
+      "alternatives": "考虑过实物黄金，选择GLD因流动性更好"
+    },
+    "logic": {
+      "background": "美股高位震荡，地缘风险、通胀担忧仍在",
+      "reasons": [
+        "投资组合缺配防守资产（目标15-20%，当前0%）",
+        "黄金作为避险资产，对冲大盘风险",
+        "美联储降息预期利好黄金",
+        "先建仓5.5%，回调或VIX上升后加仓至8%"
+      ],
+      "target": "$240（+9%）",
+      "holding_period": "长期配置",
+      "risks": "美元走强、实际利率上升"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938354",
+      "old_price": 220.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  },
+  {
+    "id": 8,
+    "date": "2026-02-09",
+    "time": "09:30 EST",
+    "symbol": "XLU",
+    "name": "公用事业ETF",
+    "direction": "买入",
+    "price": 43.35,
+    "currency": "USD",
+    "shares": 80,
+    "amount_cny": 25316,
+    "ratio": 4.3,
+    "style": "防守型-抗跌",
+    "context": {
+      "market_sentiment": "资金开始向防御性板块轮动",
+      "trigger": "用户要求攻守兼备，需配置防御性资产",
+      "alternatives": "与XLP对比，XLU股息率更高"
+    },
+    "logic": {
+      "background": "科技股分化，资金轮动至防御板块",
+      "reasons": [
+        "投资组合缺配防守资产",
+        "公用事业低波动、高股息，适合防守",
+        "降息预期利好高股息资产",
+        "与科技股低相关性，分散风险"
+      ],
+      "target": "$82（+9%）+ 股息3-4%",
+      "holding_period": "长期配置",
+      "risks": "利率上升、通胀超预期"
+    },
+    "price_source": "Yahoo Finance",
+    "data_correction": {
+      "corrected_at": "2026-02-09T10:16:47.938355",
+      "old_price": 75.0,
+      "reason": "Replaced estimated price with real market data"
+    }
+  }
+]

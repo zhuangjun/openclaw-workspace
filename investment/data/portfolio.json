@@ -1,0 +1,171 @@
+{
+  "summary": {
+    "initial_capital": 1000000,
+    "current_value": 1000000,
+    "total_return": 0,
+    "start_date": "2026-02-09",
+    "target_annual_return": 20,
+    "strategy": "大仓稳健，小仓爆发，攻守兼备",
+    "data_corrected": "2026-02-09T10:16:47.938856",
+    "price_source": "Yahoo Finance",
+    "adjusted_to_target": true,
+    "adjustment_note": "Cash adjusted by ¥4,095 to reach target ¥1,000,000"
+  },
+  "allocation": {
+    "core_large": {
+      "name": "核心-大仓稳健",
+      "target_ratio": "40-50%",
+      "current_ratio": 41.4,
+      "color": "#238636",
+      "positions": [
+        {
+          "symbol": "MSFT",
+          "name": "Microsoft",
+          "value": 204982,
+          "ratio": 20.58,
+          "shares": 70,
+          "cost": 401.14,
+          "currency": "USD",
+          "cost_source": "Yahoo Finance"
+        },
+        {
+          "symbol": "TSLA",
+          "name": "Tesla",
+          "value": 150055,
+          "ratio": 15.07,
+          "shares": 50,
+          "cost": 411.11,
+          "currency": "USD",
+          "cost_source": "Yahoo Finance"
+        },
+        {
+          "symbol": "GOOGL",
+          "name": "Alphabet",
+          "value": 58921,
+          "ratio": 5.92,
+          "shares": 25,
+          "cost": 322.86,
+          "currency": "USD",
+          "cost_source": "Yahoo Finance"
+        }
+      ],
+      "current_value": 413959
+    },
+    "satellite": {
+      "name": "卫星-小仓爆发",
+      "target_ratio": "15-20%",
+      "current_ratio": 11.63,
+      "color": "#f0883e",
+      "positions": [
+        {
+          "symbol": "BTC",
+          "name": "Bitcoin",
+          "value": 61610,
+          "ratio": 6.19,
+          "shares": 0.12,
+          "cost": 70331.45,
+          "currency": "USD",
+          "unit": "枚",
+          "cost_source": "Yahoo Finance"
+        },
+        {
+          "symbol": "NVDA",
+          "name": "Nvidia",
+          "value": 20302,
+          "ratio": 2.04,
+          "shares": 15,
+          "cost": 185.41,
+          "currency": "USD",
+          "cost_source": "Yahoo Finance"
+        },
+        {
+          "symbol": "3690.HK",
+          "name": "美团",
+          "value": 34347,
+          "ratio": 3.45,
+          "shares": 400,
+          "cost": 91.35,
+          "currency": "HKD",
+          "cost_source": "Yahoo Finance"
+        }
+      ],
+      "current_value": 116260
+    },
+    "defensive": {
+      "name": "防守型-抗跌",
+      "target_ratio": "15-20%",
+      "current_ratio": 14.17,
+      "color": "#8957e5",
+      "positions": [
+        {
+          "symbol": "GLD",
+          "name": "黄金ETF",
+          "value": 116370,
+          "ratio": 11.68,
+          "shares": 35,
+          "cost": 455.46,
+          "currency": "USD",
+          "cost_source": "Yahoo Finance"
+        },
+        {
+          "symbol": "XLU",
+          "name": "公用事业ETF",
+          "value": 25316,
+          "ratio": 2.54,
+          "shares": 80,
+          "cost": 43.35,
+          "currency": "USD",
+          "cost_source": "Yahoo Finance"
+        }
+      ],
+      "current_value": 141686
+    },
+    "cash": {
+      "name": "现金储备",
+      "target_ratio": "15-25%",
+      "current_ratio": 32.81,
+      "color": "#6e7681",
+      "value": 328095
+    }
+  },
+  "pending_trades": [
+    {
+      "priority": "P0",
+      "symbol": "GLD",
+      "action": "加仓",
+      "trigger": "价格回调或VIX>20",
+      "target_ratio": "8%"
+    },
+    {
+      "priority": "P1",
+      "symbol": "GOOGL",
+      "action": "加仓",
+      "trigger": "回调至$180以下",
+      "target_ratio": "8%"
+    },
+    {
+      "priority": "P2",
+      "symbol": "XLU",
+      "action": "加仓",
+      "trigger": "市场波动加大",
+      "target_ratio": "8%"
+    },
+    {
+      "priority": "P3",
+      "symbol": "戴维斯双击标的",
+      "action": "买入",
+      "trigger": "评分>7分",
+      "target_ratio": "5-8%"
+    }
+  ],
+  "risk_management": {
+    "max_single_core": "20%",
+    "max_single_satellite": "8%",
+    "max_offensive": "60%",
+    "stop_loss_policy": "严格按估值和安全边际",
+    "crash_response": {
+      "vix_30": "减仓进攻型至50%，增配黄金/债券",
+      "daily_drop_5": "启动防守模式，暂停买入"
+    }
+  }
+}

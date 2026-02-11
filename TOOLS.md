@@ -1,36 +1,124 @@
-# TOOLS.md - Local Notes
+# TOOLS.md - 本地环境配置
 
-Skills define *how* tools work. This file is for *your* specifics — the stuff that's unique to your setup.
-
-## What Goes Here
-
-Things like:
-- Camera names and locations
-- SSH hosts and aliases  
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
-
-## Examples
-
-```markdown
-### Cameras
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
-
-### SSH
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
+记录本地环境的特定配置信息。
 
 ---
 
-Add whatever helps you do your job. This is your cheat sheet.
+## 🖥️ 生产服务器
+
+### 股票分析网站 (stock-value-analyzer)
+| 属性 | 值 |
+|------|-----|
+| **域名** | https://danielzhuang.xyz/ |
+| **服务器** | 43.134.37.253 (腾讯云) |
+| **SSH** | `ssh ubuntu@43.134.37.253` |
+| **项目路径** | `~/stock-value-analyzer` |
+| **技术栈** | Flask + Gunicorn + SQLite |
+| **后端端口** | 5001 |
+| **数据库** | `stock_analyzer.db` (SQLite) |
+
+### 关键文件
+| 文件 | 用途 |
+|------|------|
+| `deploy.sh` | 部署脚本 |
+| `manage.sh` | 管理脚本 |
+| `restart-dev.sh` | 重启服务 |
+| `monitor-dev.sh` | 监控脚本 |
+| `CRONTAB_SETUP.md` | 定时任务说明 |
+| `logs/` | 日志目录 |
+
+### 常用命令
+```bash
+# 检查服务状态
+ps aux | grep gunicorn
+
+# 重启服务
+cd ~/stock-value-analyzer && ./restart-dev.sh
+
+# 查看日志
+tail -f logs/app.log
+tail -f server.log
+
+# 数据库备份
+sqlite3 stock_analyzer.db ".backup backup/stock_analyzer_$(date +%Y%m%d).db"
+```
+
+---
+
+## 📦 新应用部署规范
+
+### 环境标准
+| 配置项 | 标准值 |
+|--------|--------|
+| **Python** | 3.12.3 |
+| **虚拟环境** | `venv/` 目录在项目内 |
+| **WSGI** | gunicorn |
+| **数据库** | SQLite (轻量) 或 PostgreSQL |
+
+### 隔离策略
+⚠️ **部署新应用时必须注意：**
+1. **端口隔离** - 新应用不能使用 5001 端口（已被占用）
+2. **路径隔离** - 新应用放在 `~/` 或 `~/apps/` 下
+3. **Nginx 配置** - 使用不同域名或子路径
+4. **Systemd 服务** - 使用独立的服务名
+5. **数据库** - 使用独立的数据库文件/实例
+
+### 推荐端口分配
+| 端口 | 用途 |
+|------|------|
+| 5001 | stock-value-analyzer (Flask) ✅ 已占用 |
+| 5002+ | 新应用预留 |
+
+---
+
+## 🎬 YouTube 视频转录流程
+
+用于下载 YouTube 视频并本地转录为文字（投资分析用）。
+
+### 依赖工具
+```bash
+# YouTube 下载器
+pip3 install --user yt-dlp
+
+# 本地语音识别 (已预装)
+whisper --version
+```
+
+### 标准流程
+```bash
+# 1. 下载音频
+mkdir -p ~/youtube-dl && cd ~/youtube-dl
+~/Library/Python/3.14/bin/yt-dlp -x --audio-format mp3 \
+  "https://youtube.com/watch?v=VIDEO_ID" \
+  -o "rhino_%(upload_date)s.%(ext)s"
+
+# 2. 本地转录
+cd ~/youtube-dl
+whisper rhino_YYYYMMDD.mp3 --model tiny --language Chinese --output_format txt
+```
+
+### 模型选择
+| 模型 | 大小 | 速度 | 适用场景 |
+|------|------|------|---------|
+| tiny | 39 MB | 3-4分钟 | 快速预览 |
+| base | 74 MB | 5-8分钟 | 平衡 |
+| small | 244 MB | 10-15分钟 | 高质量 |
+
+---
+
+## 🔑 重要配置摘要
+
+### Chrome 浏览器
+- **用途**：仅用于 Gemini 任务
+- **原则**：永远只使用一个 Tab
+- **Browser Relay**：保持 ON 状态
+
+### 端口使用
+| 端口 | 服务 | 状态 |
+|------|------|------|
+| 5001 | stock-value-analyzer | 已占用 |
+| 5002 | Friday API | 预留 |
+| 5003+ | 新应用 | 可用 |
+
+### Friday 网站详细配置
+详见 `~/friday-portfolio/web/` 和相关文档。

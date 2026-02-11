@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friday | AI Investment Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e14;
+            --bg-secondary: #111820;
+            --bg-card: #161b22;
+            --border: #21262d;
+            --border-hover: #30363d;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #00d4aa;
+            --accent-blue: #58a6ff;
+            --accent-purple: #a371f7;
+            --accent-orange: #f0883e;
+            --accent-red: #f85149;
+            --accent-green: #3fb950;
+            --gradient-1: linear-gradient(135deg, #00d4aa 0%, #00a8e8 100%);
+            --gradient-2: linear-gradient(135deg, #a371f7 0%, #58a6ff 100%);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 12px 40px rgba(0, 212, 170, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 0 24px;
+        }
+        
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.3em;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .nav-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        
+        .nav-link.active {
+            background: var(--bg-card);
+            color: var(--accent);
+        }
+        
+        /* Main Content */
+        .main {
+            padding-top: 64px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 24px 60px;
+            text-align: center;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 212, 170, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(88, 166, 255, 0.1), transparent);
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+        
+        .hero h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-desc {
+            font-size: 1.25em;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+        
+        .hero-stat {
+            text-align: center;
+        }
+        
+        .hero-stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .hero-stat-label {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+        
+        /* Section */
+        .section {
+            padding: 60px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+        }
+        
+        .section-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .section-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 24px;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+        }
+        
+        .card-icon.green { background: rgba(0, 212, 170, 0.15); }
+        .card-icon.blue { background: rgba(88, 166, 255, 0.15); }
+        .card-icon.purple { background: rgba(163, 113, 247, 0.15); }
+        .card-icon.orange { background: rgba(240, 136, 62, 0.15); }
+        .card-icon.red { background: rgba(248, 81, 73, 0.15); }
+        
+        .card-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-badge.active {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .card-badge.scheduled {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent-blue);
+        }
+        
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+        
+        .card-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Portfolio Preview */
+        .portfolio-preview {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .portfolio-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .portfolio-stat {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .portfolio-stat-label {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        
+        .portfolio-stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .portfolio-stat-change {
+            font-size: 0.85em;
+            margin-top: 4px;
+        }
+        
+        .positive { color: var(--accent-green); }
+        .negative { color: var(--accent-red); }
+        
+        /* Reports List */
+        .reports-list {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .report-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s;
+        }
+        
+        .report-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .report-item:last-child {
+            border-bottom: none;
+        }
+        
+        .report-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-size: 1.3em;
+        }
+        
+        .report-info {
+            flex: 1;
+        }
+        
+        .report-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .report-meta {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+        
+        .report-date {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .report-arrow {
+            color: var(--text-muted);
+            font-size: 1.2em;
+        }
+        
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9em;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2em;
+            }
+            
+            .hero-stats {
+                gap: 24px;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="/Friday/" class="logo">
+                <div class="logo-icon">🎯</div>
+                <span>Friday</span>
+            </a>
+            <div class="nav-links">
+                <a href="/Friday/" class="nav-link active">概览</a>
+                <a href="/Friday/portfolio/" class="nav-link">模拟盘</a>
+                <a href="/Friday/reports/" class="nav-link">研究报告</a>
+                <a href="/Friday/task/" class="nav-link">任务监控</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="status-dot"></span>
+                系统运行正常
+            </div>
+            <h1>Friday Investment Intelligence</h1>
+            <p class="hero-desc">
+                AI驱动的投资分析系统，每日自动生成市场洞察、机会发现与组合追踪报告
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value" id="portfolioValue">--</div>
+                    <div class="hero-stat-label">组合净值</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value" id="totalReturn">--</div>
+                    <div class="hero-stat-label">累计收益</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value" id="reportCount">4</div>
+                    <div class="hero-stat-label">今日报告</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Modules -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-title-icon">🎯</div>
+                    核心功能
+                </h2>
+            </div>
+            
+            <div class="cards-grid">
+                <!-- Portfolio -->
+                <a href="portfolio/" class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">📈</div>
+                        <span class="card-badge active">运行中</span>
+                    </div>
+                    <h3 class="card-title">模拟投资组合</h3>
+                    <p class="card-desc">
+                        大仓稳健，小仓爆发，攻守兼备的资产配置策略。实时追踪净值变化、持仓明细与交易记录。
+                    </p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">💰 实时净值</span>
+                        <span class="card-meta-item">📊 收益曲线</span>
+                        <span class="card-meta-item">🔄 日度检查</span>
+                    </div>
+                </a>
+
+                <!-- Research Reports -->
+                <a href="reports/" class="card">
+                    <div class="card-header">
+                        <div class="card-icon blue">📑</div>
+                        <span class="card-badge scheduled">定时生成</span>
+                    </div>
+                    <h3 class="card-title">投资研究报告</h3>
+                    <p class="card-desc">
+                        基于 Gemini Deep Research 的深度分析报告。涵盖投资逻辑、戴维斯双击扫描、美股主线分析等。
+                    </p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">🔍 Deep Research</span>
+                        <span class="card-meta-item">📈 多维度分析</span>
+                        <span class="card-meta-item">🌐 在线阅读</span>
+                    </div>
+                </a>
+
+                <!-- Morning Report -->
+                <a href="task/?type=morning_report" class="card">
+                    <div class="card-header">
+                        <div class="card-icon purple">🌅</div>
+                        <span class="card-badge scheduled">每日 07:00</span>
+                    </div>
+                    <h3 class="card-title">股市综合晨报</h3>
+                    <p class="card-desc">
+                        美股+港股市场每日晨报。包含市场情绪指标、MAG7动态、南向资金流向、重仓股追踪。
+                    </p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">🇺🇸 美股</span>
+                        <span class="card-meta-item">🇭🇰 港股</span>
+                        <span class="card-meta-item">💎 MAG7</span>
+                    </div>
+                </a>
+
+                <!-- Davis Double Play -->
+                <a href="task/?type=davies_double" class="card">
+                    <div class="card-header">
+                        <div class="card-icon orange">🎯</div>
+                        <span class="card-badge scheduled">每日 05:30</span>
+                    </div>
+                    <h3 class="card-title">戴维斯双击扫描</h3>
+                    <p class="card-desc">
+                        寻找利润增长×估值提升的双重机会。扫描美股、港股、中概股的潜力标的。
+                    </p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">📈 高增长</span>
+                        <span class="card-meta-item">💎 低估值</span>
+                        <span class="card-meta-item">⭐ 星级评级</span>
+                    </div>
+                </a>
+
+                <!-- Investment Logic -->
+                <a href="task/?type=investment_logic" class="card">
+                    <div class="card-header">
+                        <div class="card-icon red">🧠</div>
+                        <span class="card-badge scheduled">每日 05:00</span>
+                    </div>
+                    <h3 class="card-title">投资逻辑分析</h3>
+                    <p class="card-desc">
+                        多资产类别投资逻辑分析。美股、港股、黄金、比特币的配置建议与风险评级。
+                    </p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">🌍 全球配置</span>
+                        <span class="card-meta-item">⚖️ 风险评估</span>
+                        <span class="card-meta-item">🎯 策略建议</span>
+                    </div>
+                </a>
+
+                <!-- US Stock Theme -->
+                <a href="task/?type=us_stock_main_theme" class="card">
+                    <div class="card-header">
+                        <div class="card-icon green">🇺🇸</div>
+                        <span class="card-badge scheduled">每日 06:30</span>
+                    </div>
+                    <h3 class="card-title">美股主线标的分析</h3>
+                    <p class="card-desc">
+                        深入分析美股市场投资主线，识别行业趋势，筛选优质标的，提供配置建议。
+                    </p>
+                    <div class="card-meta">
+                        <span class="card-meta-item">🏭 行业分析</span>
+                        <span class="card-meta-item">💎 标的筛选</span>
+                        <span class="card-meta-item">📊 DCF估值</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Latest Reports -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-title-icon">📑</div>
+                    最新报告
+                </h2>
+                <a href="reports/" class="section-link">查看全部 →</a>
+            </div>
+            
+            <div class="reports-list" id="reportsList">
+                <div class="report-item" href="reports/msft_dcf_valuation_2026-02-11.html">
+                    <div class="report-icon">📊</div>
+                    <div class="report-info">
+                        <div class="report-title">MSFT DCF估值分析</div>
+                        <div class="report-meta">微软公司现金流折现估值 | 内在价值 $369.50</div>
+                    </div>
+                    <div class="report-date">2026-02-11</div>
+                    <div class="report-arrow">→</div>
+                </div>
+                <div class="report-item" href="reports/us_stock_main_theme_2026-02-11.html">
+                    <div class="report-icon">🇺🇸</div>
+                    <div class="report-info">
+                        <div class="report-title">美股主线标的分析</div>
+                        <div class="report-meta">AI资本回报率审视 · 行业轮动 · 六只精选标的</div>
+                    </div>
+                    <div class="report-date">2026-02-11</div>
+                    <div class="report-arrow">→</div>
+                </div>
+                <div class="report-item" href="reports/davis_double_play_2026-02-11.html">
+                    <div class="report-icon">🎯</div>
+                    <div class="report-info">
+                        <div class="report-title">戴维斯双击扫描</div>
+                        <div class="report-meta">7只潜力标的 | 美光(MU)、阿里(9988.HK)等</div>
+                    </div>
+                    <div class="report-date">2026-02-11</div>
+                    <div class="report-arrow">→</div>
+                </div>
+                <div class="report-item" href="reports/investment_logic_2026-02-11.html">
+                    <div class="report-icon">🧠</div>
+                    <div class="report-info">
+                        <div class="report-title">投资逻辑分析</div>
+                        <div class="report-meta">美股·港股·黄金·BTC | 策略权重与风险评估</div>
+                    </div>
+                    <div class="report-date">2026-02-11</div>
+                    <div class="report-arrow">→</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Preview -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <div class="section-title-icon">💰</div>
+                    组合概览
+                </h2>
+                <a href="portfolio/" class="section-link">查看详情 →</a>
+            </div>
+            
+            <div class="portfolio-preview">
+                <div class="portfolio-stats">
+                    <div class="portfolio-stat">
+                        <div class="portfolio-stat-label">当前净值</div>
+                        <div class="portfolio-stat-value" id="navValue">--</div>
+                    </div>
+                    <div class="portfolio-stat">
+                        <div class="portfolio-stat-label">累计收益</div>
+                        <div class="portfolio-stat-value" id="returnValue">--</div>
+                        <div class="portfolio-stat-change" id="returnChange">--</div>
+                    </div>
+                    <div class="portfolio-stat">
+                        <div class="portfolio-stat-label">持仓标的</div>
+                        <div class="portfolio-stat-value">8</div>
+                    </div>
+                    <div class="portfolio-stat">
+                        <div class="portfolio-stat-label">现金比例</div>
+                        <div class="portfolio-stat-value">32.8%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/Friday/" class="footer-link">Friday</a>
+            <a href="/Friday/portfolio/" class="footer-link">模拟盘</a>
+            <a href="/Friday/reports/" class="footer-link">研究报告</a>
+            <a href="https://danielzhuang.xyz/" class="footer-link">主站</a>
+        </div>
+        <p>Friday AI Investment System &copy; 2026</p>
+        <p style="margin-top: 8px; font-size: 0.85em;">数据仅供参考，不构成投资建议</p>
+    </footer>
+
+    <script>
+        // Load portfolio data
+        async function loadPortfolio() {
+            try {
+                const response = await fetch('/api/portfolio/summary');
+                const data = await response.json();
+                
+                // Format values
+                const nav = (data.value / 10000).toFixed(2);
+                const returnPct = data.return_pct;
+                
+                document.getElementById('portfolioValue').textContent = '¥' + nav + '万';
+                document.getElementById('totalReturn').textContent = (returnPct >= 0 ? '+' : '') + returnPct.toFixed(2) + '%';
+                document.getElementById('totalReturn').style.color = returnPct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+                
+                document.getElementById('navValue').textContent = '¥' + nav + '万';
+                document.getElementById('returnValue').textContent = (returnPct >= 0 ? '+' : '') + returnPct.toFixed(2) + '%';
+                document.getElementById('returnValue').className = 'portfolio-stat-value ' + (returnPct >= 0 ? 'positive' : 'negative');
+                document.getElementById('returnChange').textContent = returnPct >= 0 ? '↑ 盈利中' : '↓ 亏损中';
+                document.getElementById('returnChange').className = 'portfolio-stat-change ' + (returnPct >= 0 ? 'positive' : 'negative');
+            } catch (err) {
+                console.error('Failed to load portfolio:', err);
+                document.getElementById('portfolioValue').textContent = '¥100万';
+                document.getElementById('totalReturn').textContent = '0.00%';
+                document.getElementById('navValue').textContent = '¥100万';
+                document.getElementById('returnValue').textContent = '0.00%';
+            }
+        }
+        
+        // Make report items clickable
+        document.querySelectorAll('.report-item').forEach(item => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', () => {
+                const href = item.getAttribute('href');
+                if (href) window.location.href = href;
+            });
+        });
+        
+        // Initialize
+        loadPortfolio();
+    </script>
+</body>
+</html>

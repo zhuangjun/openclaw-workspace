@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日投资晨报 - Friday</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: #0a0e14;
+            color: #e6e6e6;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            padding: 30px 0;
+            border-bottom: 1px solid #1f2937;
+            margin-bottom: 30px;
+        }
+        .back-link {
+            color: #8b949e;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+        .back-link:hover {
+            color: #00d4aa;
+        }
+        h1 {
+            font-size: 1.8em;
+            color: #f0f6fc;
+        }
+        .date-selector {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .date-btn {
+            padding: 8px 16px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #8b949e;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .date-btn:hover {
+            border-color: #00d4aa;
+            color: #00d4aa;
+        }
+        .date-btn.active {
+            background: #00d4aa;
+            border-color: #00d4aa;
+            color: #0a0e14;
+        }
+        .report-content {
+            background: #111820;
+            border-radius: 12px;
+            padding: 28px;
+            border: 1px solid #1f2937;
+        }
+        .indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #21262d;
+        }
+        .indicator {
+            background: #0d1117;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .indicator-label {
+            color: #8b949e;
+            font-size: 0.85em;
+            margin-bottom: 8px;
+        }
+        .indicator-value {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+        .section {
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 1.2em;
+            color: #00d4aa;
+            margin-bottom: 12px;
+            padding-left: 12px;
+            border-left: 3px solid #00d4aa;
+        }
+        .section-content {
+            color: #c9d1d9;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #8b949e;
+        }
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #f85149;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../" class="back-link">← 返回总览</a>
+            <h1>📰 每日投资晨报</h1>
+            <p style="color: #8b949e; margin-top: 8px;">美股+港股综合晨报，保留30天历史</p>
+        </header>
+
+        <div class="date-selector" id="dateSelector">
+            <div class="loading">加载中...</div>
+        </div>
+
+        <div id="reportContent">
+            <div class="loading">选择日期查看晨报</div>
+        </div>
+    </div>
+
+    <script>
+        let reports = [];
+        let currentId = null;
+
+        // 加载历史记录
+        async function loadHistory() {
+            try {
+                const response = await fetch('/Friday/api/tasks/results?task_type=morning_report&limit=30');
+                reports = await response.json();
+                renderDateSelector();
+                // 默认显示最新
+                if (reports.length > 0) {
+                    loadReport(reports[0].id);
+                }
+            } catch (err) {
+                document.getElementById('dateSelector').innerHTML = 
+                    '<div class="error">加载失败: ' + err.message + '</div>';
+            }
+        }
+
+        // 渲染日期选择器
+        function renderDateSelector() {
+            const container = document.getElementById('dateSelector');
+            container.innerHTML = reports.map(r => {
+                const date = new Date(r.task_date);
+                const label = `${date.getMonth()+1}/${date.getDate()}`;
+                return `<button class="date-btn ${r.id === currentId ? 'active' : ''}" 
+                        onclick="loadReport(${r.id})">${label}</button>`;
+            }).join('');
+        }
+
+        // 加载指定报告
+        async function loadReport(id) {
+            currentId = id;
+            renderDateSelector();
+            
+            const container = document.getElementById('reportContent');
+            container.innerHTML = '<div class="loading">加载中...</div>';
+            
+            try {
+                const response = await fetch(`/Friday/api/tasks/results/${id}`);
+                const report = await response.json();
+                
+                if (response.ok) {
+                    renderReport(report);
+                } else {
+                    container.innerHTML = '<div class="error">未找到该日期的晨报</div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="error">加载失败: ' + err.message + '</div>';
+            }
+        }
+
+        // 渲染晨报内容 - 从 result_data 或 content 字段解析
+        function renderReport(r) {
+            const container = document.getElementById('reportContent');
+            
+            // 获取报告内容数据
+            let data = r.result_data || r.content || r;
+            
+            // 如果 data 是字符串，尝试解析 JSON
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data);
+                } catch (e) {
+                    // 不是 JSON，按纯文本处理
+                }
+            }
+            
+            // 从 metrics 字段获取指标
+            const metrics = r.metrics || data.metrics || {};
+            
+            container.innerHTML = `
+                <div class="report-content">
+                    <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #21262d;">
+                        <h2 style="color: #f0f6fc; margin-bottom: 8px;">${r.title || data.title || '每日投资晨报'}</h2>
+                        <p style="color: #8b949e; font-size: 0.9em;">${r.task_date || data.date || ''} · ${r.summary || data.summary || ''}</p>
+                    </div>
+                    
+                    <div class="indicators">
+                        <div class="indicator">
+                            <div class="indicator-label">VIX 波动率</div>
+                            <div class="indicator-value" style="color: ${getVixColor(metrics.vix)}">${metrics.vix || '--'}</div>
+                        </div>
+                        <div class="indicator">
+                            <div class="indicator-label">美股恐惧贪婪</div>
+                            <div class="indicator-value" style="color: ${getFearGreedColor(metrics.fear_greed_us)}">${metrics.fear_greed_us || '--'}</div>
+                        </div>
+                        <div class="indicator">
+                            <div class="indicator-label">加密恐惧贪婪</div>
+                            <div class="indicator-value" style="color: ${getFearGreedColor(metrics.fear_greed_crypto)}">${metrics.fear_greed_crypto || '--'}</div>
+                        </div>
+                    </div>
+                    
+                    ${renderSection('📌 主线叙事', data.narrative)}
+                    ${renderSection('💰 资金流向', data.fund_flow)}
+                    ${renderSection('😊 情绪周期', data.sentiment_cycle)}
+                    ${renderSection('⚡ 预期差', data.expectation_gap)}
+                    ${renderSection('🎯 策略建议', data.strategy)}
+                    ${renderSection('🇺🇸 美股大盘', data.us_market_summary)}
+                    ${renderSection('🏢 MAG7 分析', data.mag7_analysis)}
+                    ${renderSection('🇭🇰 港股市场', data.hk_market_summary)}
+                    ${renderSection('📊 重仓股追踪', data.heavy_stocks_tracking)}
+                    ${renderSection('📅 本周关注', data.weekly_focus)}
+                    
+                    ${data.content ? `<div class="section"><div class="section-content">${data.content}</div></div>` : ''}
+                    ${r.content && typeof r.content === 'string' && !data.content ? `<div class="section"><div class="section-content">${r.content}</div></div>` : ''}
+                </div>
+            `;
+        }
+
+        function renderSection(title, content) {
+            if (!content) return '';
+            return `
+                <div class="section">
+                    <div class="section-title">${title}</div>
+                    <div class="section-content">${content}</div>
+                </div>
+            `;
+        }
+
+        function getVixColor(vix) {
+            if (!vix) return '#e6e6e6';
+            if (vix < 20) return '#3fb950'; // 平静
+            if (vix < 30) return '#f0883e'; // 担忧
+            return '#f85149'; // 恐慌
+        }
+
+        function getFearGreedColor(score) {
+            if (!score) return '#e6e6e6';
+            if (score < 25) return '#f85149'; // 恐惧
+            if (score > 75) return '#f85149'; // 贪婪
+            return '#3fb950'; // 中性
+        }
+
+        // 初始化
+        loadHistory();
+    </script>
+</body>
+</html>
