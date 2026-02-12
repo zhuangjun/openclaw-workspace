@@ -2,13 +2,26 @@
 
 ## 定时任务 (Gemini Deep Research)
 
-| 时间 | 任务 |
-|------|------|
-| 05:00 | 投资逻辑分析（美股+港股+黄金+BTC） |
-| 05:30 | 戴维斯双击扫描 |
-| 06:00 | 股市综合晨报（美股+港股+MAG7+重仓股） |
-| 06:30 | 美股主线标的分析 |
-| 07:00 | 同步投资组合数据到生产环境 |
+| 时间 | 任务 | 模型 | 同步报告 |
+|------|------|------|----------|
+| 每 6 小时 | QMD 索引更新 | 系统命令 | - |
+| 每天 00:00 | 每日凌晨学习 - 投资技能探索 | kimi-coding/k2p5 | - |
+| 每周二、四 05:00 | 戴维斯双击潜力股扫描 | main agent | ✅ |
+| 每天 06:00 | 股市综合晨报（美股+港股+MAG7+重仓股） | main agent | ✅ |
+| 每天 08:00 | Friday Portfolio 交易决策检查 | kimi-coding/k2p5 | - |
+| 每周六 13:00 | 投资逻辑分析（美股+港股+黄金+BTC） | main agent | ✅ |
+| 每周六 14:30 | 美股主线标的分析 | main agent | ✅ |
+
+## 报告同步流程
+
+每个生成报告的 Deep Research 任务，在完成后需要调用同步：
+
+```bash
+# 在报告生成后执行
+/Users/daniel/.openclaw/workspace/skills/friday-report-sync/scripts/sync_report.sh
+```
+
+**访问地址**: https://danielzhuang.xyz/Friday/reports/
 
 ## 市场情绪指标
 

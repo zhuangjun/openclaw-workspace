@@ -1,0 +1,370 @@
+#!/usr/bin/env python3
+"""
+DCF Valuation Tool - Discounted Cash Flow Model
+DCF 估值模型工具 - 基于自由现金流的绝对估值方法
+
+Usage: dcf-valuation [options]
+       dcf-valuation --interactive
+"""
+
+import sys
+import argparse
+import json
+from dataclasses import dataclass
+from typing import List, Tuple
+
+
+@dataclass
+class DCFInputs:
+    """DCF模型输入参数"""
+    current_fcf: float  # 当前年度自由现金流 (百万美元)
+    growth_rate_5y: float  # 前5年增长率
+    growth_rate_terminal: float  # 永续增长率
+    discount_rate: float  # 折现率 (WACC)
+    shares_outstanding: float  # 总股本 (百万股)
+    net_debt: float = 0  # 净债务 (百万美元，正数表示净负债)
+    projection_years: int = 5  # 预测期年数
+
+
+class DCFValuation:
+    """DCF估值模型实现"""
+    
+    def __init__(self, inputs: DCFInputs):
+        self.inputs = inputs
+    
+    def calculate_fcf_projections(self) -> List[Tuple[int, float]]:
+        """计算未来自由现金流预测"""
+        projections = []
+        fcf = self.inputs.current_fcf
+        
+        for year in range(1, self.inputs.projection_years + 1):
+            fcf = fcf * (1 + self.inputs.growth_rate_5y)
+            projections.append((year, fcf))
+        
+        return projections
+    
+    def calculate_terminal_value(self, final_fcf: float) -> float:
+        """计算终值 (Gordon Growth Model)"""
+        # TV = FCF_n * (1 + g) / (r - g)
+        terminal_fcf = final_fcf * (1 + self.inputs.growth_rate_terminal)
+        terminal_value = terminal_fcf / (self.inputs.discount_rate - self.inputs.growth_rate_terminal)
+        return terminal_value
+    
+    def calculate_present_value(self, cash_flows: List[Tuple[int, float]], terminal_value: float) -> dict:
+        """计算现值"""
+        pv_cash_flows = []
+        
+        for year, fcf in cash_flows:
+            pv = fcf / ((1 + self.inputs.discount_rate) ** year)
+            pv_cash_flows.append({
+                'year': year,
+                'fcf': fcf,
+                'pv': pv
+            })
+        
+        # 终值现值
+        pv_terminal = terminal_value / ((1 + self.inputs.discount_rate) ** self.inputs.projection_years)
+        
+        # 企业价值
+        enterprise_value = sum(cf['pv'] for cf in pv_cash_flows) + pv_terminal
+        
+        return {
+            'pv_cash_flows': pv_cash_flows,
+            'pv_terminal': pv_terminal,
+            'enterprise_value': enterprise_value
+        }
+    
+    def calculate_equity_value(self, enterprise_value: float) -> dict:
+        """计算股权价值"""
+        equity_value = enterprise_value - self.inputs.net_debt
+        value_per_share = equity_value / self.inputs.shares_outstanding
+        
+        return {
+            'enterprise_value': enterprise_value,
+            'net_debt': self.inputs.net_debt,
+            'equity_value': equity_value,
+            'shares_outstanding': self.inputs.shares_outstanding,
+            'value_per_share': value_per_share
+        }
+    
+    def sensitivity_analysis(self) -> dict:
+        """敏感性分析 - 不同WACC和增长率下的估值"""
+        # WACC变化范围
+        wacc_range = [
+            self.inputs.discount_rate - 0.02,
+            self.inputs.discount_rate - 0.01,
+            self.inputs.discount_rate,
+            self.inputs.discount_rate + 0.01,
+            self.inputs.discount_rate + 0.02
+        ]
+        
+        # 永续增长率变化范围
+        growth_range = [
+            max(0.01, self.inputs.growth_rate_terminal - 0.01),
+            self.inputs.growth_rate_terminal,
+            self.inputs.growth_rate_terminal + 0.01
+        ]
+        
+        sensitivity_matrix = []
+        
+        for g in growth_range:
+            row = []
+            for wacc in wacc_range:
+                if wacc > g:  # 确保 wacc > g
+                    temp_inputs = DCFInputs(
+                        current_fcf=self.inputs.current_fcf,
+                        growth_rate_5y=self.inputs.growth_rate_5y,
+                        growth_rate_terminal=g,
+                        discount_rate=wacc,
+                        shares_outstanding=self.inputs.shares_outstanding,
+                        net_debt=self.inputs.net_debt,
+                        projection_years=self.inputs.projection_years
+                    )
+                    temp_dcf = DCFValuation(temp_inputs)
+                    projections = temp_dcf.calculate_fcf_projections()
+                    terminal = temp_dcf.calculate_terminal_value(projections[-1][1])
+                    pv_result = temp_dcf.calculate_present_value(projections, terminal)
+                    equity = temp_dcf.calculate_equity_value(pv_result['enterprise_value'])
+                    row.append(equity['value_per_share'])
+                else:
+                    row.append(None)
+            sensitivity_matrix.append({
+                'growth_rate': f"{g*100:.1f}%",
+                'values': row
+            })
+        
+        return {
+            'wacc_range': [f"{w*100:.1f}%" for w in wacc_range],
+            'matrix': sensitivity_matrix
+        }
+    
+    def run_valuation(self) -> dict:
+        """执行完整估值流程"""
+        # 1. 预测自由现金流
+        projections = self.calculate_fcf_projections()
+        
+        # 2. 计算终值
+        terminal_value = self.calculate_terminal_value(projections[-1][1])
+        
+        # 3. 计算现值
+        pv_result = self.calculate_present_value(projections, terminal_value)
+        
+        # 4. 计算股权价值
+        equity_result = self.calculate_equity_value(pv_result['enterprise_value'])
+        
+        # 5. 敏感性分析
+        sensitivity = self.sensitivity_analysis()
+        
+        return {
+            'inputs': {
+                'current_fcf': self.inputs.current_fcf,
+                'growth_rate_5y': self.inputs.growth_rate_5y,
+                'growth_rate_terminal': self.inputs.growth_rate_terminal,
+                'discount_rate': self.inputs.discount_rate,
+                'shares_outstanding': self.inputs.shares_outstanding,
+                'net_debt': self.inputs.net_debt
+            },
+            'projections': [
+                {'year': p[0], 'fcf': p[1], 'pv': p[1] / ((1 + self.inputs.discount_rate) ** p[0])}
+                for p in projections
+            ],
+            'terminal_value': terminal_value,
+            'pv_terminal': pv_result['pv_terminal'],
+            'enterprise_value': pv_result['enterprise_value'],
+            'equity_value': equity_result['equity_value'],
+            'value_per_share': equity_result['value_per_share'],
+            'sensitivity_analysis': sensitivity
+        }
+
+
+def format_currency(value: float, decimals: int = 2) -> str:
+    """格式化货币显示"""
+    if abs(value) >= 1e12:
+        return f"${value/1e12:.{decimals}f}T"
+    elif abs(value) >= 1e9:
+        return f"${value/1e9:.{decimals}f}B"
+    elif abs(value) >= 1e6:
+        return f"${value/1e6:.{decimals}f}M"
+    else:
+        return f"${value:,.{decimals}f}"
+
+
+def print_valuation_report(result: dict, current_price: float = None):
+    """打印估值报告"""
+    inputs = result['inputs']
+    
+    print("=" * 60)
+    print("📊 DCF 估值分析报告")
+    print("=" * 60)
+    
+    # 输入参数
+    print("\n【输入假设】")
+    print(f"  当前自由现金流: {format_currency(inputs['current_fcf'] * 1e6)}")
+    print(f"  前5年增长率: {inputs['growth_rate_5y']*100:.1f}%")
+    print(f"  永续增长率: {inputs['growth_rate_terminal']*100:.1f}%")
+    print(f"  折现率 (WACC): {inputs['discount_rate']*100:.1f}%")
+    print(f"  总股本: {inputs['shares_outstanding']:.2f} 百万股")
+    print(f"  净债务: {format_currency(inputs['net_debt'] * 1e6)}")
+    
+    # 自由现金流预测
+    print("\n【自由现金流预测】")
+    print("-" * 50)
+    print(f"{'年份':<10}{'FCF':<20}{'现值':<20}")
+    print("-" * 50)
+    for p in result['projections']:
+        print(f"Year {p['year']:<5}{format_currency(p['fcf']*1e6):<20}{format_currency(p['pv']*1e6):<20}")
+    print("-" * 50)
+    print(f"{'终值':<10}{format_currency(result['terminal_value']*1e6):<20}{format_currency(result['pv_terminal']*1e6):<20}")
+    
+    # 估值结果
+    print("\n【估值结果】")
+    print(f"  企业价值 (EV): {format_currency(result['enterprise_value']*1e6)}")
+    print(f"  股权价值: {format_currency(result['equity_value']*1e6)}")
+    print(f"  每股内在价值: ${result['value_per_share']:.2f}")
+    
+    if current_price:
+        upside = (result['value_per_share'] - current_price) / current_price * 100
+        print(f"  当前价格: ${current_price:.2f}")
+        print(f"  上涨空间: {upside:+.1f}%")
+        
+        if upside > 20:
+            print(f"  📈 估值结论: 显著低估")
+        elif upside > 5:
+            print(f"  📊 估值结论: 略微低估")
+        elif upside > -5:
+            print(f"  ➖ 估值结论: 合理估值")
+        else:
+            print(f"  📉 估值结论: 高估")
+    
+    # 敏感性分析
+    print("\n【敏感性分析 - 每股价值 (WACC vs 永续增长率)】")
+    sens = result['sensitivity_analysis']
+    wacc_header = "  ".join([f"{w:<12}" for w in sens['wacc_range']])
+    print(f"{'G\\WACC':<10}{wacc_header}")
+    print("-" * 70)
+    for row in sens['matrix']:
+        values_str = "  ".join([f"${v:<11.2f}" if v else f"{'N/A':<12}" for v in row['values']])
+        print(f"{row['growth_rate']:<10}{values_str}")
+    
+    print("\n" + "=" * 60)
+
+
+def interactive_mode():
+    """交互模式 - 引导用户输入参数"""
+    print("\n🧮 DCF 估值计算器 (交互模式)")
+    print("=" * 50)
+    print("提示: 按Enter使用默认值\n")
+    
+    try:
+        # 获取输入
+        fcf = float(input("当前年度自由现金流 (百万美元) [100]: ") or "100")
+        growth_5y = float(input("前5年增长率 (%) [15]: ") or "15") / 100
+        growth_terminal = float(input("永续增长率 (%) [3]: ") or "3") / 100
+        wacc = float(input("折现率/WACC (%) [10]: ") or "10") / 100
+        shares = float(input("总股本 (百万股) [1000]: ") or "1000")
+        net_debt = float(input("净债务 (百万美元，负债>资产为正) [0]: ") or "0")
+        
+        current_price_input = input("当前股价 (可选，用于计算上涨空间) [回车跳过]: ").strip()
+        current_price = float(current_price_input) if current_price_input else None
+        
+        # 创建输入对象
+        inputs = DCFInputs(
+            current_fcf=fcf,
+            growth_rate_5y=growth_5y,
+            growth_rate_terminal=growth_terminal,
+            discount_rate=wacc,
+            shares_outstanding=shares,
+            net_debt=net_debt
+        )
+        
+        # 执行估值
+        dcf = DCFValuation(inputs)
+        result = dcf.run_valuation()
+        
+        # 打印报告
+        print_valuation_report(result, current_price)
+        
+        # 保存选项
+        save = input("\n是否保存JSON格式结果? (y/n) [n]: ").strip().lower()
+        if save == 'y':
+            filename = input("文件名 [dcf_result.json]: ").strip() or "dcf_result.json"
+            with open(filename, 'w') as f:
+                json.dump(result, f, indent=2)
+            print(f"结果已保存到: {filename}")
+        
+    except ValueError as e:
+        print(f"输入错误: {e}")
+        sys.exit(1)
+    except KeyboardInterrupt:
+        print("\n已取消")
+        sys.exit(0)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='DCF 估值模型工具 - 基于自由现金流的绝对估值方法',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+示例:
+  dcf-valuation --interactive              # 交互模式
+  dcf-valuation --json '{"current_fcf":100,...}'  # JSON输入
+        """
+    )
+    
+    parser.add_argument('--interactive', '-i', action='store_true', 
+                       help='交互模式，引导输入参数')
+    parser.add_argument('--json', '-j', type=str,
+                       help='JSON格式输入参数')
+    parser.add_argument('--fcf', type=float, default=100,
+                       help='当前自由现金流 (百万美元) [默认: 100]')
+    parser.add_argument('--growth-5y', type=float, default=0.15,
+                       help='前5年增长率 [默认: 0.15]')
+    parser.add_argument('--growth-terminal', type=float, default=0.03,
+                       help='永续增长率 [默认: 0.03]')
+    parser.add_argument('--wacc', type=float, default=0.10,
+                       help='折现率/WACC [默认: 0.10]')
+    parser.add_argument('--shares', type=float, default=1000,
+                       help='总股本 (百万股) [默认: 1000]')
+    parser.add_argument('--net-debt', type=float, default=0,
+                       help='净债务 (百万美元) [默认: 0]')
+    parser.add_argument('--current-price', type=float,
+                       help='当前股价 (用于计算上涨空间)')
+    parser.add_argument('--save', '-s', type=str,
+                       help='保存结果到JSON文件')
+    
+    args = parser.parse_args()
+    
+    if args.interactive:
+        interactive_mode()
+        return
+    
+    # 从JSON或命令行参数创建输入
+    if args.json:
+        data = json.loads(args.json)
+        inputs = DCFInputs(**data)
+    else:
+        inputs = DCFInputs(
+            current_fcf=args.fcf,
+            growth_rate_5y=args.growth_5y,
+            growth_rate_terminal=args.growth_terminal,
+            discount_rate=args.wacc,
+            shares_outstanding=args.shares,
+            net_debt=args.net_debt
+        )
+    
+    # 执行估值
+    dcf = DCFValuation(inputs)
+    result = dcf.run_valuation()
+    
+    # 打印报告
+    print_valuation_report(result, args.current_price)
+    
+    # 保存结果
+    if args.save:
+        with open(args.save, 'w') as f:
+            json.dump(result, f, indent=2)
+        print(f"\n结果已保存到: {args.save}")
+
+
+if __name__ == '__main__':
+    main()

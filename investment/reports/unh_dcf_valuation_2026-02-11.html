@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>联合健康(UNH) DCF估值深度研究报告 | Friday Reports</title>
+    <title>unh_dcf_valuation_2026-02-11 | Friday Reports</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -99,37 +99,24 @@
         .report-content th,
         .report-content td {
             padding: 0.75rem;
-            border: 1px solid var(--border);
             text-align: left;
+            border: 1px solid var(--border);
         }
         
         .report-content th {
             background: var(--code-bg);
             font-weight: 600;
+            color: var(--text);
         }
         
         .report-content tr:nth-child(even) { background: var(--bg); }
-        
-        .report-content ul, .report-content ol {
-            margin: 1rem 0 1rem 1.5rem;
-        }
-        
-        .report-content li { margin-bottom: 0.5rem; }
-        
-        .report-content blockquote {
-            border-left: 4px solid var(--primary);
-            padding-left: 1rem;
-            margin: 1.5rem 0;
-            color: var(--text-muted);
-            font-style: italic;
-        }
         
         .report-content code {
             background: var(--code-bg);
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9em;
+            font-family: 'Monaco', monospace;
+            font-size: 0.85em;
         }
         
         .report-content pre {
@@ -137,305 +124,257 @@
             padding: 1rem;
             border-radius: 8px;
             overflow-x: auto;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
         }
         
-        .report-content pre code {
-            background: none;
-            padding: 0;
-        }
-        
-        .report-content .highlight {
-            background: #fef3c7;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-        }
+        .report-content pre code { background: none; padding: 0; }
         
         .footer {
             text-align: center;
             padding: 2rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            .report-content { padding: 1.5rem; }
+            .report-content h1 { font-size: 1.5rem; }
+            .report-content h2 { font-size: 1.25rem; }
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-content">
-            <h1>📊 Friday Research Reports</h1>
-            <a href="/Friday/reports/">← 返回报告列表</a>
+            <h1>📊 Friday Reports</h1>
+            <a href="index.html">← 返回报告列表</a>
         </div>
     </header>
     
     <main class="container">
         <article class="report-content">
-            <h1>联合健康集团（UNH）DCF估值深度研究报告</h1>
-            <p><strong>副标题：</strong>监管风暴下的价值重置与纵向整合模型的韧性分析</p>
-            <p><strong>报告日期：</strong>2026年2月11日</p>
-            <p><strong>估值结论：</strong>买入 | 目标价 $398.50 (基准情景)</p>
-            
-            <h2>执行摘要</h2>
-            <p>联合健康集团（UnitedHealth Group, UNH）作为全球医疗保健行业的领军者，正处于其战略演进的十字路口。在经历了长达十年的高速扩张后，该公司在2024至2025年间遭遇了前所未有的挑战，包括严重的网络攻击、医疗利用率的结构性上升以及监管环境的剧烈变动。</p>
-            
-            <p><strong>DCF估值结果：</strong></p>
-            <ul>
-                <li>🟢 乐观情景：<strong>$465/股</strong> — 技术突破与监管缓解</li>
-                <li>🟡 基准情景：<strong>$398.50/股</strong> — 稳健修复</li>
-                <li>🔴 悲观情景：<strong>$275/股</strong> — 监管与法律双重打击</li>
-            </ul>
-            
-            <p><strong>投资建议：买入。</strong>当前股价较内在价值存在显著折价，反映了市场对短期监管逆风的过度反应。</p>
-            
-            <h2>第一部分：公司概况与商业模式</h2>
-            
-            <h3>1.1 UnitedHealthcare：承保业务的规模与战略转型</h3>
-            <p>UnitedHealthcare是美国最大的私人健康保险公司，服务4980万用户。2025年，Medicare & Retirement板块营收达到1713亿美元，同比增长23%。然而，由于Medicare Advantage审计加强和报销规则修订，保险端利润率从5.2%下滑至2.7%，促使公司采取更审慎的扩张策略。</p>
-            
-            <h3>1.2 Optum：驱动长期价值的核心引擎</h3>
-            <p>Optum被定位为医疗服务、药房福利管理（PBM）和数据分析的技术赋能者：</p>
-            <ul>
-                <li><strong>Optum Health：</strong>价值医疗模式，通过更有效的患者管理降低整体医疗成本</li>
-                <li><strong>Optum Insight：</strong>技术大脑，320亿美元营收订单积压（Backlog）</li>
-                <li><strong>Optum Rx：</strong>美国三大PBM之一，2025年表现强劲</li>
-            </ul>
-            
-            <h3>1.3 纵向整合的协同效应</h3>
-            <p>2025年，公司内部抵消额高达<strong>1535亿美元</strong>（占营收34%），形成闭环利润系统。这种独特的商业模式使得联合健康能够在行业整体成本上升的环境下，通过内部价格转移和效率提升来部分规避外部价格压力。</p>
-            
-            <h2>第二部分：财务表现深度分析（2021-2025）</h2>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>指标</th>
-                        <th>2021</th>
-                        <th>2022</th>
-                        <th>2023</th>
-                        <th>2024</th>
-                        <th>2025</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>总营收</td>
-                        <td>$287.6B</td>
-                        <td>$324.2B</td>
-                        <td>$371.6B</td>
-                        <td>$400.3B</td>
-                        <td><strong>$447.6B</strong></td>
-                    </tr>
-                    <tr>
-                        <td>净利润</td>
-                        <td>$17.3B</td>
-                        <td>$20.1B</td>
-                        <td>$22.4B</td>
-                        <td>$14.4B</td>
-                        <td><strong>$12.1B</strong></td>
-                    </tr>
-                    <tr>
-                        <td>医疗赔付率(MCR)</td>
-                        <td>82.6%</td>
-                        <td>82.0%</td>
-                        <td>83.2%</td>
-                        <td>85.5%</td>
-                        <td><strong>88.9%</strong></td>
-                    </tr>
-                    <tr>
-                        <td>自由现金流(FCF)</td>
-                        <td>$19.9B</td>
-                        <td>$23.4B</td>
-                        <td>$25.7B</td>
-                        <td>$20.7B</td>
-                        <td><strong>$16.1B</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <p>尽管GAAP利润出现下滑，但联合健康的现金生成能力依然强健。2025年经营现金流达到197亿美元，是净利润的1.5倍以上。</p>
-            
-            <h2>第三部分：DCF估值模型构建</h2>
-            
-            <h3>3.1 核心假设</h3>
-            <ul>
-                <li><strong>WACC：</strong>7.0%</li>
-                <li><strong>永续增长率：</strong>2.5%-3.0%</li>
-                <li><strong>2026E营收：</strong>$439B（-1.9%，主动收缩低利润业务）</li>
-                <li><strong>2026E利润率：</strong>5.5%（反弹）</li>
-                <li><strong>2027-2030 CAGR：</strong>5.5%</li>
-            </ul>
-            
-            <h3>3.2 财务预测（2026E-2030E）</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>年度</th>
-                        <th>2026E</th>
-                        <th>2027E</th>
-                        <th>2028E</th>
-                        <th>2029E</th>
-                        <th>2030E</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>营收</td>
-                        <td>$439B</td>
-                        <td>$463B</td>
-                        <td>$489B</td>
-                        <td>$516B</td>
-                        <td>$544B</td>
-                    </tr>
-                    <tr>
-                        <td>FCFF</td>
-                        <td>$177亿</td>
-                        <td>$205亿</td>
-                        <td>$225亿</td>
-                        <td>$246亿</td>
-                        <td>$267亿</td>
-                    </tr>
-                    <tr>
-                        <td>利润率</td>
-                        <td>5.5%</td>
-                        <td>6.0%</td>
-                        <td>6.2%</td>
-                        <td>6.4%</td>
-                        <td>6.6%</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <h2>第四部分：情景分析与敏感性矩阵</h2>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>情景</th>
-                        <th>核心假设</th>
-                        <th>每股价值</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>🟢 乐观</td>
-                        <td>2027年费率上调至2%以上，AI模型显著降低行政开支</td>
-                        <td><strong>$465.00</strong></td>
-                    </tr>
-                    <tr>
-                        <td>🟡 基准</td>
-                        <td>费率虽不理想，但公司通过成本管理成功吸收压力</td>
-                        <td><strong>$398.50</strong></td>
-                    </tr>
-                    <tr>
-                        <td>🔴 悲观</td>
-                        <td>反垄断调查导致业务拆分，Medicare费率长期低于通胀</td>
-                        <td><strong>$275.00</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <h3>敏感性分析（WACC vs 永续增长率）</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>永续/WACC</th>
-                        <th>6.5%</th>
-                        <th>7.0%</th>
-                        <th>7.5%</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2.0%</td>
-                        <td>$392</td>
-                        <td>$345</td>
-                        <td>$308</td>
-                    </tr>
-                    <tr>
-                        <td>2.5%</td>
-                        <td>$441</td>
-                        <td><strong>$398</strong></td>
-                        <td>$335</td>
-                    </tr>
-                    <tr>
-                        <td>3.0%</td>
-                        <td>$505</td>
-                        <td>$432</td>
-                        <td>$372</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <h2>第五部分：与当前市场估值对比</h2>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>估值指标</th>
-                        <th>UNH</th>
-                        <th>CVS</th>
-                        <th>行业平均</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>远期P/E</td>
-                        <td><strong>15.4x</strong></td>
-                        <td>10.5x</td>
-                        <td>13.5x</td>
-                    </tr>
-                    <tr>
-                        <td>P/B</td>
-                        <td>2.6x</td>
-                        <td>1.2x</td>
-                        <td>2.0x</td>
-                    </tr>
-                    <tr>
-                        <td>EV/EBITDA</td>
-                        <td>11.2x</td>
-                        <td>9.8x</td>
-                        <td>10.2x</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <p>分析师共识目标价的中位数仍维持在<strong>$450</strong>左右，暗示了超过60%的潜在上涨空间。</p>
-            
-            <h2>第六部分：投资逻辑、风险提示与竞争格局</h2>
-            
-            <h3>6.1 核心增长驱动逻辑</h3>
-            <ul>
-                <li><strong>内部生态闭环：</strong>Optum服务范围扩大，捕捉更多原本流向外部医院系统的利润</li>
-                <li><strong>数据资产变现：</strong>Optum Insight向其他医院和保险公司提供风控工具</li>
-                <li><strong>人口老龄化红利：</strong>MA计划作为高效的混合保险模式，长期需求确定性强</li>
-            </ul>
-            
-            <h3>6.2 风险提示</h3>
-            <ul>
-                <li><strong>2027费率终稿变数：</strong>若4月最终费率通知未能修正0.09%提案，行业将面临连续两年利润负增长</li>
-                <li><strong>反垄断审查升级：</strong>DOJ正在调查医疗账务操作及PBM业务利益输送</li>
-                <li><strong>通胀与成本控制失灵：</strong>医护人员工资上涨可能抵消效率提升</li>
-            </ul>
-            
-            <h2>第七部分：结论与建议</h2>
-            
-            <p>综合DCF估值模型、情景分析以及对监管环境的穿透式研究，本报告得出以下结论：</p>
-            
-            <p>联合健康集团（UNH）正处于一个<strong>被错杀的估值底部</strong>。2025年的利润大幅下滑并非核心竞争力的丧失，而是公司在面临监管结构性变动时采取的主动清障行为。虽然2026年营收可能出现近四十年来的首次年度下滑，但这仅仅是主动抛弃低效业务的结果，其经调整后的EPS仍有望实现8%以上的增长。</p>
-            
-            <p>从内在价值角度看，每股<strong>$398美元</strong>的基准价值较当前价格提供了极具吸引力的安全边际。投资者应关注2026年第一季度业绩报告中MCR的边际改善，以及4月初CMS最终费率通知的发布。这两个事件将是估值回归的关键催化剂。</p>
-            
-            <p><strong>投资建议：买入。</strong>对于长期机构投资者而言，当前的倍数压缩提供了在优质资产处于困境时建立头寸的机会。联合健康的纵向整合模式在应对复杂的价值医疗转型中，依然是整个行业最具防御性和扩张能力的体系。</p>
-            
-            <hr>
-            
-            <p><em>本报告基于公开财务资料进行估值建模，仅供参考，不构成投资建议。</em></p>
-            <p><em>数据来源：公司财报、Morningstar、Seeking Alpha、MarketBeat等</em></p>
-            <p><em>报告生成时间：2026年2月11日</em></p>
+<h1 id="unhdcf">联合健康集团（UNH）DCF估值深度研究报告</h1>
+<blockquote>
+<p>监管风暴下的价值重置与纵向整合模型的韧性分析</p>
+</blockquote>
+<h2 id="_1">执行摘要</h2>
+<p>联合健康集团（UnitedHealth Group, UNH）作为全球医疗保健行业的领军者，正处于其战略演进的十字路口。在经历了长达十年的高速扩张后，该公司在2024至2025年间遭遇了前所未有的挑战，包括严重的网络攻击、医疗利用率的结构性上升以及监管环境的剧烈变动。</p>
+<p><strong>DCF估值结果</strong>：
+- 乐观情景：$465/股
+- 基准情景：$398.50/股<br />
+- 悲观情景：$275/股</p>
+<p><strong>投资建议</strong>：买入。当前股价较内在价值存在显著折价。</p>
+<hr />
+<h2 id="_2">第一部分：公司概况与商业模式</h2>
+<h3 id="11-unitedhealthcare">1.1 UnitedHealthcare：承保业务的规模与战略转型</h3>
+<ul>
+<li>服务4980万用户，美国最大私人健康保险</li>
+<li>2025年Medicare &amp; Retirement营收$1713亿（+23%）</li>
+<li>利润率从5.2%下滑至2.7%，主动优化业务组合</li>
+</ul>
+<h3 id="12-optum">1.2 Optum：驱动长期价值的核心引擎</h3>
+<ul>
+<li><strong>Optum Health</strong>：价值医疗模式，短期亏损但长期降本</li>
+<li><strong>Optum Insight</strong>：AI驱动数据分析，320亿美元订单积压</li>
+<li><strong>Optum Rx</strong>：药房福利管理，2025年表现强劲</li>
+</ul>
+<h3 id="13">1.3 纵向整合护城河</h3>
+<ul>
+<li>2025年内部抵消额$1535亿（占营收34%）</li>
+<li>保险赔付流向集团内部机构，形成闭环利润</li>
+</ul>
+<hr />
+<h2 id="2021-2025">第二部分：财务表现深度分析（2021-2025）</h2>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>2021</th>
+<th>2022</th>
+<th>2023</th>
+<th>2024</th>
+<th>2025</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总营收</td>
+<td>$287.6B</td>
+<td>$324.2B</td>
+<td>$371.6B</td>
+<td>$400.3B</td>
+<td><strong>$447.6B</strong></td>
+</tr>
+<tr>
+<td>净利润</td>
+<td>$17.3B</td>
+<td>$20.1B</td>
+<td>$22.4B</td>
+<td>$14.4B</td>
+<td><strong>$12.1B</strong></td>
+</tr>
+<tr>
+<td>医疗赔付率</td>
+<td>82.6%</td>
+<td>82.0%</td>
+<td>83.2%</td>
+<td>85.5%</td>
+<td><strong>88.9%</strong></td>
+</tr>
+<tr>
+<td>自由现金流</td>
+<td>$19.9B</td>
+<td>$23.4B</td>
+<td>$25.7B</td>
+<td>$20.7B</td>
+<td><strong>$16.1B</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dcf">第三部分：DCF估值模型构建</h2>
+<h3 id="31">3.1 核心假设</h3>
+<ul>
+<li>WACC：7.0%</li>
+<li>永续增长率：2.5%-3.0%</li>
+<li>2026E营收：$439B（-1.9%，主动收缩）</li>
+<li>2026E利润率：5.5%（反弹）</li>
+<li>2027-2030 CAGR：5.5%</li>
+</ul>
+<h3 id="32-2026e-2030e">3.2 财务预测（2026E-2030E）</h3>
+<table>
+<thead>
+<tr>
+<th>年度</th>
+<th>2026E</th>
+<th>2027E</th>
+<th>2028E</th>
+<th>2029E</th>
+<th>2030E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>营收</td>
+<td>$439B</td>
+<td>$463B</td>
+<td>$489B</td>
+<td>$516B</td>
+<td>$544B</td>
+</tr>
+<tr>
+<td>FCFF</td>
+<td>$177亿</td>
+<td>$205亿</td>
+<td>$225亿</td>
+<td>$246亿</td>
+<td>$267亿</td>
+</tr>
+<tr>
+<td>利润率</td>
+<td>5.5%</td>
+<td>6.0%</td>
+<td>6.2%</td>
+<td>6.4%</td>
+<td>6.6%</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">第四部分：情景分析</h2>
+<h3 id="41-wacc-vs">4.1 估值敏感性表 (WACC vs 永续增长率)</h3>
+<table>
+<thead>
+<tr>
+<th>永续/WACC</th>
+<th>6.5%</th>
+<th><strong>7.0%</strong></th>
+<th>7.5%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.0%</td>
+<td>$392</td>
+<td><strong>$345</strong></td>
+<td>$308</td>
+</tr>
+<tr>
+<td><strong>2.5%</strong></td>
+<td>$441</td>
+<td><strong>$398</strong></td>
+<td>$335</td>
+</tr>
+<tr>
+<td>3.0%</td>
+<td>$505</td>
+<td><strong>$432</strong></td>
+<td>$372</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_4">第五部分：当前估值对比</h2>
+<table>
+<thead>
+<tr>
+<th>估值指标</th>
+<th>UNH</th>
+<th>CVS</th>
+<th>行业平均</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>远期P/E</td>
+<td><strong>15.4x</strong></td>
+<td>10.5x</td>
+<td>13.5x</td>
+</tr>
+<tr>
+<td>P/B</td>
+<td>2.6x</td>
+<td>1.2x</td>
+<td>2.0x</td>
+</tr>
+<tr>
+<td>EV/EBITDA</td>
+<td>11.2x</td>
+<td>9.8x</td>
+<td>10.2x</td>
+</tr>
+</tbody>
+</table>
+<p><strong>分析师共识目标价</strong>：~$450（暗示60%+上涨空间）</p>
+<hr />
+<h2 id="_5">第六部分：投资逻辑与风险</h2>
+<h3 id="_6">核心增长驱动</h3>
+<ul>
+<li>内部生态闭环：Optum服务范围扩大，捕捉更多利润</li>
+<li>数据资产变现：Optum Insight高毛利收入</li>
+<li>人口老龄化红利：MA市场统治地位</li>
+</ul>
+<h3 id="_7">核心风险</h3>
+<ul>
+<li>2027 Medicare费率终稿变数</li>
+<li>反垄断审查升级（DOJ调查）</li>
+<li>通胀与成本控制失灵</li>
+</ul>
+<hr />
+<h2 id="_8">结论与建议</h2>
+<p><strong>买入评级</strong>：
+- 当前估值反映过度监管恐慌
+- 2026年重组为2027年后利润率修复铺平道路
+- 纵向整合模式仍具最强防御性和扩张能力</p>
+<p><strong>关注催化剂</strong>：Q1业绩MCR改善 + 4月CMS最终费率通知</p>
+<hr />
+<p><em>报告生成时间：2026年2月11日</em>
+<em>数据来源：公司财报、Morningstar、Seeking Alpha、MarketBeat等</em></p>
         </article>
     </main>
     
     <footer class="footer">
-        <p>Friday AI Investment System &copy; 2026</p>
+        <p>Friday Portfolio &copy; 2026</p>
     </footer>
 </body>
 </html>

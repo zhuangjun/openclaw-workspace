@@ -3,300 +3,576 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>投资研究报告 | Friday</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Friday Reports | 投资研究报告库</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0e14;
-            --bg-secondary: #111820;
-            --bg-card: #161b22;
-            --border: #21262d;
-            --border-hover: #30363d;
-            --text-primary: #f0f6fc;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            --accent: #00d4aa;
-            --accent-blue: #58a6ff;
-            --accent-purple: #a371f7;
-            --accent-orange: #f0883e;
-            --accent-red: #f85149;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            min-height: 100vh;
         }
         
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(10, 14, 20, 0.95);
-            backdrop-filter: blur(20px);
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        
+        .header p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        
+        .stats-bar {
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 0 24px;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
-        .navbar-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 64px;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.3em;
-            color: var(--text-primary);
-            text-decoration: none;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .nav-link {
-            padding: 8px 16px;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 0.95em;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            color: var(--text-primary);
-            background: var(--bg-card);
-        }
-        
-        .main {
+        .stats-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 96px 24px 48px;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
         }
         
-        .header-section {
-            margin-bottom: 32px;
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
         }
         
-        .header-section h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+        /* Filters */
+        .filters {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
         }
         
-        .header-section p {
-            color: var(--text-secondary);
+        .filter-section {
+            margin-bottom: 1rem;
         }
         
+        .filter-section:last-child { margin-bottom: 0; }
+        
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-icon { font-size: 1.1em; }
+        .btn-count {
+            background: rgba(0,0,0,0.1);
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.8em;
+        }
+        
+        .filter-btn.active .btn-count {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .clear-filters {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .clear-filters:hover { color: var(--text); }
+        
+        /* Results count */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+        }
+        
+        .results-count {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+        
+        .results-count strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+        
+        /* Reports Grid */
         .reports-grid {
             display: grid;
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
         }
         
         .report-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
+            background: var(--card-bg);
             border-radius: 12px;
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            cursor: pointer;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
             transition: all 0.2s;
-            text-decoration: none;
-            color: inherit;
         }
         
         .report-card:hover {
-            border-color: var(--border-hover);
-            background: rgba(255, 255, 255, 0.02);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
         }
         
-        .report-icon {
-            width: 56px;
-            height: 56px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+        .report-card.hidden { display: none; }
+        
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .report-type {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.8em;
-            flex-shrink: 0;
+            gap: 0.4rem;
         }
         
-        .report-content {
-            flex: 1;
+        .type-icon { font-size: 1.1em; }
+        
+        .report-type.type-blue { background: #dbeafe; color: #1e40af; }
+        .report-type.type-green { background: #d1fae5; color: #065f46; }
+        .report-type.type-purple { background: #e9d5ff; color: #6b21a8; }
+        .report-type.type-orange { background: #ffedd5; color: #9a3412; }
+        .report-type.type-cyan { background: #cffafe; color: #155e75; }
+        .report-type.type-gray { background: #f3f4f6; color: #374151; }
+        
+        .report-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
         
         .report-title {
-            font-size: 1.1em;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 4px;
-            color: var(--text-primary);
+            margin-bottom: 1rem;
+            color: var(--text);
+            line-height: 1.4;
+        }
+        
+        .report-date-inline {
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
         }
         
         .report-meta {
-            color: var(--text-secondary);
-            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
         }
         
-        .report-date {
+        .file-size {
+            font-size: 0.85rem;
             color: var(--text-muted);
-            font-size: 0.85em;
-            text-align: right;
-            padding-right: 16px;
         }
         
-        .report-arrow {
+        .report-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover { background: var(--primary-dark); }
+        
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover { background: var(--border); }
+        
+        .no-reports {
+            text-align: center;
+            padding: 3rem;
             color: var(--text-muted);
-            font-size: 1.2em;
-            transition: transform 0.2s;
-        }
-        
-        .report-card:hover .report-arrow {
-            transform: translateX(4px);
-            color: var(--accent);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 48px;
-            color: var(--text-secondary);
-        }
-        
-        .error {
-            text-align: center;
-            padding: 48px;
-            color: var(--accent-red);
+            grid-column: 1 / -1;
         }
         
         .footer {
             text-align: center;
-            padding: 48px 24px;
+            padding: 2rem;
             color: var(--text-muted);
-            font-size: 0.9em;
+            font-size: 0.85rem;
             border-top: 1px solid var(--border);
-            margin-top: 48px;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .reports-grid { grid-template-columns: 1fr; }
+            .filter-buttons { gap: 0.4rem; }
+            .filter-btn { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-content">
-            <a href="/Friday/" class="logo">
-                <span>Friday</span>
-            </a>
-            <div class="nav-links">
-                <a href="/Friday/" class="nav-link">概览</a>
-                <a href="/Friday/portfolio/" class="nav-link">模拟盘</a>
-                <a href="/Friday/reports/" class="nav-link active">研究报告</a>
-                <a href="/Friday/task/" class="nav-link">任务监控</a>
+    <header class="header">
+        <h1>📊 Friday Reports</h1>
+        <p>专业的投资研究报告库，支持按时间和类别筛选</p>
+    </header>
+    
+    <div class="stats-bar">
+        <div class="stats-content">
+            <div class="stat-item">
+                <div class="stat-value">7</div>
+                <div class="stat-label">报告总数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">6</div>
+                <div class="stat-label">报告类型</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">79.5 KB</div>
+                <div class="stat-label">总容量</div>
             </div>
         </div>
-    </nav>
+    </div>
+    
+    <main class="container">
+        <!-- Filters -->
+        <div class="filters">
+            <div class="filter-section">
+                <span class="filter-label">⏰ 时间筛选</span>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="time" data-value="all">全部时间</button>
+                    <button class="filter-btn" data-filter="time" data-value="today">今天</button>
+                    <button class="filter-btn" data-filter="time" data-value="week">最近7天</button>
+                    <button class="filter-btn" data-filter="time" data-value="month">最近30天</button>
+                </div>
+            </div>
+            
+            <div class="filter-section">
+                <span class="filter-label">📁 类别筛选</span>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="type" data-value="all">全部类别</button>
+<button class="filter-btn" data-filter="type" data-value="投资报告"><span class="btn-icon">📄</span> 投资报告 <span class="btn-count">2</span></button>
+<button class="filter-btn" data-filter="type" data-value="a_stock_potential_targets"><span class="btn-icon">🇨🇳</span> A股潜力标的 <span class="btn-count">1</span></button>
+<button class="filter-btn" data-filter="type" data-value="msft_dcf_valuation"><span class="btn-icon">📊</span> DCF估值分析 <span class="btn-count">1</span></button>
+<button class="filter-btn" data-filter="type" data-value="us_stock_main_theme"><span class="btn-icon">🇺🇸</span> 美股主线分析 <span class="btn-count">1</span></button>
+<button class="filter-btn" data-filter="type" data-value="davis_double_play"><span class="btn-icon">🎯</span> 戴维斯双击扫描 <span class="btn-count">1</span></button>
+<button class="filter-btn" data-filter="type" data-value="investment_logic"><span class="btn-icon">🧠</span> 投资逻辑分析 <span class="btn-count">1</span></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="results-info">
+            <span class="results-count">显示 <strong id="visibleCount">7</strong> 份报告</span>
+            <button class="clear-filters" onclick="clearAllFilters()">清除筛选</button>
+        </div>
+        
+        <div class="reports-grid" id="reportsGrid">
 
-    <main class="main">
-        <div class="header-section">
-            <h1>📑 投资研究报告</h1>
-            <p>基于 Gemini Deep Research 的深度分析，每日自动更新</p>
+        <div class="report-card" data-date="2026-02-11" data-type="投资报告" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-gray">
+                    <span class="type-icon">📄</span>
+                    投资报告
+                </span>
+                <span class="report-date">昨天 15:12</span>
+            </div>
+            <h3 class="report-title">Pdd Dcf Valuation <span class="report-date-inline">(2026-02-11 15:12)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 4.7 KB</span>
+                <div class="report-actions">
+                    <a href="pdd_dcf_valuation_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="pdd_dcf_valuation_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
         </div>
 
-        <div class="reports-grid" id="reportsList">
-            <div class="loading">加载中...</div>
+        <div class="report-card" data-date="2026-02-11" data-type="投资报告" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-gray">
+                    <span class="type-icon">📄</span>
+                    投资报告
+                </span>
+                <span class="report-date">昨天 15:11</span>
+            </div>
+            <h3 class="report-title">Unh Dcf Valuation <span class="report-date-inline">(2026-02-11 15:11)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 3.5 KB</span>
+                <div class="report-actions">
+                    <a href="unh_dcf_valuation_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="unh_dcf_valuation_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card" data-date="2026-02-11" data-type="a_stock_potential_targets" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-red">
+                    <span class="type-icon">🇨🇳</span>
+                    A股潜力标的
+                </span>
+                <span class="report-date">昨天 08:34</span>
+            </div>
+            <h3 class="report-title">A Stock Potential Targets <span class="report-date-inline">(2026-02-11 08:34)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 11.0 KB</span>
+                <div class="report-actions">
+                    <a href="a_stock_potential_targets_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="a_stock_potential_targets_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card" data-date="2026-02-11" data-type="msft_dcf_valuation" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-blue">
+                    <span class="type-icon">📊</span>
+                    DCF估值分析
+                </span>
+                <span class="report-date">昨天 07:47</span>
+            </div>
+            <h3 class="report-title">Msft Dcf Valuation <span class="report-date-inline">(2026-02-11 07:47)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 16.9 KB</span>
+                <div class="report-actions">
+                    <a href="msft_dcf_valuation_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="msft_dcf_valuation_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card" data-date="2026-02-11" data-type="us_stock_main_theme" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-green">
+                    <span class="type-icon">🇺🇸</span>
+                    美股主线分析
+                </span>
+                <span class="report-date">昨天 06:38</span>
+            </div>
+            <h3 class="report-title">Us Stock Main Theme <span class="report-date-inline">(2026-02-11 06:38)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 11.1 KB</span>
+                <div class="report-actions">
+                    <a href="us_stock_main_theme_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="us_stock_main_theme_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card" data-date="2026-02-11" data-type="davis_double_play" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-orange">
+                    <span class="type-icon">🎯</span>
+                    戴维斯双击扫描
+                </span>
+                <span class="report-date">昨天 05:39</span>
+            </div>
+            <h3 class="report-title">Davis Double Play <span class="report-date-inline">(2026-02-11 05:39)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 19.9 KB</span>
+                <div class="report-actions">
+                    <a href="davis_double_play_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="davis_double_play_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-card" data-date="2026-02-11" data-type="investment_logic" data-days="1">
+            <div class="report-header">
+                <span class="report-type type-blue">
+                    <span class="type-icon">🧠</span>
+                    投资逻辑分析
+                </span>
+                <span class="report-date">昨天 05:06</span>
+            </div>
+            <h3 class="report-title">Investment Logic <span class="report-date-inline">(2026-02-11 05:06)</span></h3>
+            <div class="report-meta">
+                <span class="file-size">📄 12.4 KB</span>
+                <div class="report-actions">
+                    <a href="investment_logic_2026-02-11.html" class="btn btn-primary">阅读报告</a>
+                    <a href="investment_logic_2026-02-11.md" class="btn btn-secondary" download>下载 MD</a>
+                </div>
+            </div>
+        </div>
         </div>
     </main>
-
+    
     <footer class="footer">
-        <p>Friday AI Investment System &copy; 2026</p>
-        <p style="margin-top: 8px; font-size: 0.85em;">数据仅供参考，不构成投资建议</p>
+        <p>Friday Portfolio &copy; 2026 | 最后更新: 2026-02-12 10:04</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">⚠️ 本报告仅供参考，不构成投资建议</p>
     </footer>
-
+    
     <script>
-        // 报告配置 - 手动维护报告列表
-        // 上传新报告后，需要在这里添加条目
-        const reports = [
-            {
-                file: 'unh_dcf_valuation_2026-02-11.html',
-                icon: '🏥',
-                title: '联合健康(UNH) DCF估值',
-                meta: '监管风暴下的价值重置 | 目标价 $398.50 | 买入评级',
-                date: '2026-02-11'
-            },
-            {
-                file: 'pdd_dcf_valuation_2026-02-11.html',
-                icon: '🛒',
-                title: '拼多多(PDD) DCF估值',
-                meta: '全球化扩张与Temu韧性 | 目标价 $154 | 优于大盘',
-                date: '2026-02-11'
-            },
-            {
-                file: 'msft_dcf_valuation_2026-02-11.html',
-                icon: '📊',
-                title: 'MSFT DCF估值分析',
-                meta: '微软公司现金流折现估值 | 内在价值 $369.50',
-                date: '2026-02-11'
-            },
-            {
-                file: 'us_stock_main_theme_2026-02-11.html',
-                icon: '🇺🇸',
-                title: '美股主线标的分析',
-                meta: 'AI资本回报率审视 · 行业轮动 · 六只精选标的',
-                date: '2026-02-11'
-            },
-            {
-                file: 'davis_double_play_2026-02-11.html',
-                icon: '🎯',
-                title: '戴维斯双击扫描',
-                meta: '7只潜力标的 | 美光(MU)、阿里(9988.HK)等',
-                date: '2026-02-11'
-            },
-            {
-                file: 'investment_logic_2026-02-11.html',
-                icon: '🧠',
-                title: '投资逻辑分析',
-                meta: '美股·港股·黄金·BTC | 策略权重与风险评估',
-                date: '2026-02-11'
-            }
-        ];
-
-        function renderReports() {
-            const container = document.getElementById('reportsList');
+        // Filter state
+        let activeTimeFilter = 'all';
+        let activeTypeFilter = 'all';
+        
+        // Get all filter buttons
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const reportCards = document.querySelectorAll('.report-card');
+        const visibleCountEl = document.getElementById('visibleCount');
+        
+        // Add click handlers
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filterType = btn.dataset.filter;
+                const filterValue = btn.dataset.value;
+                
+                // Update active state
+                document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update filter state
+                if (filterType === 'time') {
+                    activeTimeFilter = filterValue;
+                } else if (filterType === 'type') {
+                    activeTypeFilter = filterValue;
+                }
+                
+                applyFilters();
+            });
+        });
+        
+        function applyFilters() {
+            let visibleCount = 0;
             
-            // 按日期排序（最新的在前）
-            const sortedReports = reports.sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
+            reportCards.forEach(card => {
+                const days = parseInt(card.dataset.days);
+                const type = card.dataset.type;
+                
+                let timeMatch = true;
+                let typeMatch = true;
+                
+                // Time filter
+                if (activeTimeFilter === 'today') {
+                    timeMatch = days === 0;
+                } else if (activeTimeFilter === 'week') {
+                    timeMatch = days <= 7;
+                } else if (activeTimeFilter === 'month') {
+                    timeMatch = days <= 30;
+                }
+                
+                // Type filter
+                if (activeTypeFilter !== 'all') {
+                    typeMatch = type === activeTypeFilter;
+                }
+                
+                // Show/hide
+                if (timeMatch && typeMatch) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
             });
             
-            container.innerHTML = sortedReports.map(report => `
-                <a href="${report.file}" class="report-card">
-                    <div class="report-icon">${report.icon}</div>
-                    <div class="report-content">
-                        <div class="report-title">${report.title}</div>
-                        <div class="report-meta">${report.meta}</div>
-                    </div>
-                    <div class="report-date">${report.date}</div>
-                    <div class="report-arrow">→</div>
-                </a>
-            `).join('');
+            visibleCountEl.textContent = visibleCount;
         }
-
-        // 页面加载时渲染
-        renderReports();
+        
+        function clearAllFilters() {
+            activeTimeFilter = 'all';
+            activeTypeFilter = 'all';
+            
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.value === 'all') {
+                    btn.classList.add('active');
+                }
+            });
+            
+            applyFilters();
+        }
     </script>
 </body>
 </html>
