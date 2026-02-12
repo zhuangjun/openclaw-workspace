@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friday Reports | 投资研究报告库</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .header p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+        
+        .stats-bar {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .stats-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        .filters {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-section { margin-bottom: 1rem; }
+        .filter-section:last-child { margin-bottom: 0; }
+        
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        
+        .filter-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        
+        .report-card.hidden { display: none; }
+        
+        .report-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .report-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .report-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+        
+        .report-summary {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+        .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        
+        .page-info { font-size: 0.9rem; color: var(--text-muted); }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+        
+        .error {
+            text-align: center;
+            padding: 3rem;
+            color: #ef4444;
+            background: #fef2f2;
+            border-radius: 12px;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal.active { display: block; }
+        
+        .modal-content {
+            background: white;
+            max-width: 900px;
+            margin: 2rem auto;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .modal-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .modal-meta { opacity: 0.9; font-size: 0.9rem; }
+        
+        .modal-body {
+            padding: 2rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .markdown-content {
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3 { margin: 1.5rem 0 1rem; color: var(--text); }
+        
+        .markdown-content p { margin-bottom: 1rem; }
+        
+        .markdown-content ul,
+        .markdown-content ol { margin: 1rem 0; padding-left: 1.5rem; }
+        
+        .markdown-content li { margin-bottom: 0.5rem; }
+        
+        .markdown-content code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+        
+        .markdown-content pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: var(--text-muted);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📊 Friday Reports</h1>
+        <p>投资研究报告库 — 数据驱动的投资决策支持</p>
+    </header>
+    
+    <div class="stats-bar">
+        <div class="stats-content">
+            <div class="stat-item">
+                <div class="stat-value" id="stat-total">-</div>
+                <div class="stat-label">总报告数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-today">-</div>
+                <div class="stat-label">今日</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stat-week">-</div>
+                <div class="stat-label">本周</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="filters">
+            <div class="filter-section">
+                <span class="filter-label">报告分类</span>
+                <div class="filter-buttons" id="category-filters">
+                    <button class="filter-btn active" data-filter="category" data-value="all">全部</button>
+                    <!-- Categories will be loaded dynamically -->
+                </div>
+            </div>
+            <div class="filter-section">
+                <span class="filter-label">时间范围</span>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="time" data-value="all">全部</button>
+                    <button class="filter-btn" data-filter="time" data-value="today">今日</button>
+                    <button class="filter-btn" data-filter="time" data-value="week">最近7天</button>
+                    <button class="filter-btn" data-filter="time" data-value="month">最近30天</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="reports-container">
+            <div class="loading">加载中...</div>
+        </div>
+        
+        <div class="pagination" id="pagination">
+            <button class="page-btn" id="prev-btn" disabled>上一页</button>
+            <span class="page-info" id="page-info">第 1 页</span>
+            <button class="page-btn" id="next-btn" disabled>下一页</button>
+        </div>
+    </div>
+    
+    <!-- Report Modal -->
+    <div class="modal" id="report-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-title" id="modal-title"></div>
+                <div class="modal-meta" id="modal-meta"></div>
+            </div>
+            <div class="modal-body">
+                <div class="markdown-content" id="modal-content"></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <p>Friday Investment System &copy; 2026 | Powered by AI Research</p>
+    </footer>
+    
+    <script>
+        // API Configuration
+        const API_BASE = '/api';
+        
+        // State
+        let currentPage = 1;
+        let perPage = 9; // 3 days x 3 reports per day
+        let totalPages = 1;
+        let reports = [];
+        let categories = [];
+        let activeCategory = 'all';
+        let activeTimeFilter = 'all';
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadStats();
+            loadReports();
+            setupEventListeners();
+        });
+        
+        // Load categories
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE}/reports/categories`);
+                const data = await response.json();
+                if (data.success) {
+                    categories = data.categories;
+                    renderCategoryFilters();
+                }
+            } catch (error) {
+                console.error('Failed to load categories:', error);
+            }
+        }
+        
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/reports/stats`);
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('stat-total').textContent = data.stats.total;
+                    document.getElementById('stat-today').textContent = data.stats.today;
+                    
+                    // Calculate this week
+                    const weekCount = data.stats.daily_7d ? 
+                        data.stats.daily_7d.reduce((sum, d) => sum + d.count, 0) : 0;
+                    document.getElementById('stat-week').textContent = weekCount;
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+        
+        // Load reports
+        async function loadReports() {
+            const container = document.getElementById('reports-container');
+            container.innerHTML = '<div class="loading">加载中...</div>';
+            
+            try {
+                let url = `${API_BASE}/reports?page=${currentPage}&per_page=${perPage}`;
+                
+                if (activeCategory !== 'all') {
+                    url += `&category=${activeCategory}`;
+                }
+                
+                if (activeTimeFilter === 'today') {
+                    const today = new Date().toISOString().split('T')[0];
+                    url += `&start_date=${today}&end_date=${today}`;
+                } else if (activeTimeFilter === 'week') {
+                    url += '&days=7';
+                } else if (activeTimeFilter === 'month') {
+                    url += '&days=30';
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    reports = data.data;
+                    totalPages = data.pagination.total_pages;
+                    renderReports();
+                    updatePagination(data.pagination);
+                } else {
+                    container.innerHTML = '<div class="error">加载失败，请稍后重试</div>';
+                }
+            } catch (error) {
+                console.error('Failed to load reports:', error);
+                container.innerHTML = '<div class="error">加载失败，请检查网络连接</div>';
+            }
+        }
+        
+        // Render category filters
+        function renderCategoryFilters() {
+            const container = document.getElementById('category-filters');
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.dataset.filter = 'category';
+                btn.dataset.value = cat.id;
+                btn.textContent = `${cat.icon} ${cat.name}`;
+                container.appendChild(btn);
+            });
+        }
+        
+        // Render reports
+        function renderReports() {
+            const container = document.getElementById('reports-container');
+            
+            if (reports.length === 0) {
+                container.innerHTML = '<div class="empty">暂无报告</div>';
+                return;
+            }
+            
+            container.innerHTML = reports.map(report => `
+                <div class="report-card" onclick="openReport(${report.id})">
+                    <div class="report-icon">${report.category_icon || '📄'}</div>
+                    <div class="report-date">${formatDate(report.report_date)}</div>
+                    <div class="report-title">${escapeHtml(report.title)}</div>
+                    <div class="report-category">${report.category_name || report.category}</div>
+                    <div class="report-summary">${escapeHtml(report.summary || report.content_md?.substring(0, 200) || '暂无摘要')}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Update pagination
+        function updatePagination(pagination) {
+            document.getElementById('page-info').textContent = 
+                `第 ${pagination.page} / ${pagination.total_pages || 1} 页 (共 ${pagination.total} 份)`;
+            document.getElementById('prev-btn').disabled = !pagination.has_prev;
+            document.getElementById('next-btn').disabled = !pagination.has_next;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Category filters
+            document.getElementById('category-filters').addEventListener('click', (e) => {
+                if (e.target.dataset.filter === 'category') {
+                    document.querySelectorAll('[data-filter="category"]').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    activeCategory = e.target.dataset.value;
+                    currentPage = 1;
+                    loadReports();
+                }
+            });
+            
+            // Time filters
+            document.querySelectorAll('[data-filter="time"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-filter="time"]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeTimeFilter = btn.dataset.value;
+                    currentPage = 1;
+                    loadReports();
+                });
+            });
+            
+            // Pagination
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadReports();
+                }
+            });
+            
+            document.getElementById('next-btn').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadReports();
+                }
+            });
+            
+            // Modal close on background click
+            document.getElementById('report-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'report-modal') {
+                    closeModal();
+                }
+            });
+            
+            // ESC to close modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        }
+        
+        // Open report modal
+        async function openReport(id) {
+            try {
+                const response = await fetch(`${API_BASE}/reports/${id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const report = data.data;
+                    document.getElementById('modal-title').textContent = report.title;
+                    document.getElementById('modal-meta').textContent = 
+                        `${report.category_icon || '📄'} ${report.category_name || report.category} | ${formatDate(report.report_date)}`;
+                    
+                    // Render markdown content
+                    const content = report.content_html || marked.parse(report.content_md || '');
+                    document.getElementById('modal-content').innerHTML = content;
+                    
+                    document.getElementById('report-modal').classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            } catch (error) {
+                console.error('Failed to load report:', error);
+                alert('加载报告失败，请稍后重试');
+            }
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('report-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Utility functions
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'short'
+            });
+        }
+        
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
