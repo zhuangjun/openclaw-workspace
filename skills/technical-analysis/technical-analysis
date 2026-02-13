@@ -1,0 +1,5 @@
+#!/bin/bash
+# technical-analysis CLI 包装脚本
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python3 "/Users/daniel/.openclaw/workspace/investment/technical_analysis.py" "$@"
