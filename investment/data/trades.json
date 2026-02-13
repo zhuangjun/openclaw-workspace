@@ -302,5 +302,104 @@
       "old_price": 75.0,
       "reason": "Replaced estimated price with real market data"
     }
+  },
+  {
+    "id": 9,
+    "date": "2026-02-13",
+    "time": "08:00 CST",
+    "symbol": "GLD",
+    "name": "黄金ETF",
+    "direction": "买入",
+    "price": 451.39,
+    "currency": "USD",
+    "shares": 25,
+    "amount_cny": 81500,
+    "ratio": 8.15,
+    "style": "防守型-抗跌",
+    "context": {
+      "market_sentiment": "黄金突破$5000/oz，地缘风险持续",
+      "trigger": "pending trade P0执行，当前价格低于成本价，加仓时机",
+      "portfolio_ratio": "现金占比过高需配置"
+    },
+    "logic": {
+      "background": "黄金进入主权信用对冲新阶段，央行持续增持",
+      "reasons": [
+        "pending trade中P0优先级",
+        "当前价格$451.39低于成本$455.46，摊薄成本",
+        "黄金突破$5000后稳固，作为防御配置需补足至8%",
+        "对冲美股高位风险"
+      ],
+      "target": "$500（+10%）",
+      "holding_period": "长期配置",
+      "risks": "美元走强、实际利率上升"
+    },
+    "note": "交易决策检查自动执行"
+  },
+  {
+    "id": 10,
+    "date": "2026-02-13",
+    "time": "08:00 CST",
+    "symbol": "9988.HK",
+    "name": "阿里巴巴",
+    "direction": "买入",
+    "price": 85.00,
+    "currency": "HKD",
+    "shares": 600,
+    "amount_cny": 44000,
+    "ratio": 4.4,
+    "style": "卫星-小仓爆发",
+    "context": {
+      "market_sentiment": "港股估值修复，南向资金持续流入",
+      "trigger": "戴维斯双击扫描报告★★★★★推荐，P/E仅14x较历史折价47%",
+      "portfolio_ratio": "卫星仓位不足需补充"
+    },
+    "logic": {
+      "background": "云业务+AI双驱动，反内卷政策受益",
+      "reasons": [
+        "戴维斯双击扫描最高评级★★★★★",
+        "FY2026预期EPS增长46%，云业务利润率释放",
+        "远期P/E 14x vs 五年均值26.6x，估值折价47%",
+        "南向资金持续流入港股核心资产",
+        "补充卫星仓位缺口"
+      ],
+      "target": "HK$120（+41%）",
+      "holding_period": "6-12个月",
+      "risks": "消费需求恢复不及预期、国际贸易壁垒"
+    },
+    "reference": "davis_double_play_2026-02-11.md",
+    "note": "交易决策检查自动执行"
+  },
+  {
+    "id": 11,
+    "date": "2026-02-13",
+    "time": "08:00 CST",
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "direction": "买入",
+    "price": 95000.00,
+    "currency": "USD",
+    "shares": 0.08,
+    "share_unit": "枚",
+    "amount_cny": 55000,
+    "ratio": 5.5,
+    "style": "卫星-小仓爆发",
+    "context": {
+      "market_sentiment": "恐惧贪婪指数5-7，极度恐慌",
+      "trigger": "极端恐惧情绪提供底部布局机会",
+      "portfolio_ratio": "卫星仓位不足，BTC作为另类资产配置"
+    },
+    "logic": {
+      "background": "ETF机构化持有增加，定价逻辑转向资金流",
+      "reasons": [
+        "恐惧贪婪指数5-7，历史极端低位",
+        "已有持仓可摊薄成本",
+        "作为另类资产目标维持6-8%仓位",
+        "杠杆头寸已清理，卖盘动能接近耗尽"
+      ],
+      "target": "$120,000（+26%）",
+      "holding_period": "3-6个月",
+      "risks": "监管打击、流动性收紧、宏观关联风险"
+    },
+    "note": "交易决策检查自动执行"
   }
 ]

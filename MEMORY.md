@@ -96,9 +96,48 @@
 - ✅ 多轮对话支持
 - ✅ 深度投资分析流程
 - ✅ 动态报告列表系统（API + 前端自动加载）
+- ✅ **LongPort API 集成（2026-02-13）**
+  - 长桥证券 API 配置完成
+  - 美股/港股实时行情获取
+  - 模拟盘实时估值系统
 
 ### 进行中
 - 🔄 投资分析报告标准化
 - 🔄 自动化数据采集
 - 🔄 行业估值方法库
 - 🔄 回测验证机制
+
+---
+
+## 数据源配置
+
+### LongPort API（长桥证券）
+**配置时间**: 2026-02-13
+
+**权限状态**:
+| 市场 | 权限 | 状态 |
+|------|------|------|
+| 美股 | Nasdaq Basic | ✅ 已开通 |
+| 港股 | LV1 Real-time | ✅ 已开通 |
+| 美股期权 | - | ❌ 需购买 |
+
+**可用数据**:
+- 实时报价 (quote)
+- K线数据 (candlesticks)
+- 分时数据 (intraday)
+- 买卖盘深度 (depth)
+- 成交明细 (trades)
+- 账户信息（只读）
+
+**使用脚本**:
+```bash
+# 更新模拟盘实时估值
+python3 investment/update_portfolio_full.py
+
+# 仅显示当前状态
+python3 investment/update_portfolio_full.py --display-only
+```
+
+**汇率设置**:
+- USD/CNY = 7.25
+- HKD/CNY = 0.93

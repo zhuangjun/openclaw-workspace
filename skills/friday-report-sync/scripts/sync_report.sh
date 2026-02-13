@@ -5,8 +5,8 @@
 set -e
 
 # 默认配置
-API_BASE="${FRIDAY_API_URL:-https://danielzhuang.xyz/api}"
-API_TOKEN="${FRIDAY_API_TOKEN:-dev-token}"
+API_BASE="${FRIDAY_API_URL:-https://danielzhuang.xyz/Friday/api}"
+API_TOKEN="${FRIDAY_API_TOKEN:-dev-token-change-in-production}"
 REPORTS_DIR="${FRIDAY_REPORTS_DIR:-/Users/daniel/.openclaw/workspace/investment/reports}"
 
 # 颜色定义
