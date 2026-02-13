@@ -139,5 +139,46 @@ python3 investment/update_portfolio_full.py --display-only
 ```
 
 **汇率设置**:
-- USD/CNY = 7.25
-- HKD/CNY = 0.93
+- USD/CNY: 6.91 (实时)
+- HKD/CNY: 0.88 (实时)
+
+### CoinMarketCap API
+**配置时间**: 2026-02-13
+
+**用途**: 加密货币价格获取
+
+**环境变量**:
+```bash
+CMC_API_KEY="b88a1a0a..."  # 已配置
+```
+
+**使用脚本**:
+```bash
+python3 investment/cmc_price.py
+```
+
+### 实时汇率 API
+**配置时间**: 2026-02-13
+
+**数据源**: exchangerate-api.com (免费版)
+
+**用途**: USD/CNY, HKD/CNY 实时汇率
+
+**使用脚本**:
+```bash
+python3 investment/exchange_rate.py
+```
+
+### 模拟盘实时估值系统
+**更新于**: 2026-02-13
+
+**功能**:
+- 美股/港股实时价格 (LongPort API)
+- BTC 实时价格 (CoinMarketCap API)
+- 实时汇率换算
+- 自动计算市值和盈亏
+- 更新 portfolio.json
+
+**定时集成**:
+- 每日 08:00 交易决策检查自动执行
+- 手动执行: `python3 investment/update_portfolio_full.py`
