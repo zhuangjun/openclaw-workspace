@@ -172,11 +172,26 @@ echo "   行数: $(wc -l < "$FILE_PATH")"
 echo ""
 
 # 构建JSON数据
-# 提取摘要（前500字符，去掉markdown标记）
-SUMMARY=$(echo "$CONTENT" | sed 's/#//g' | sed 's/\*\*//g' | tr '\n' ' ' | cut -c1-500)
+# 提取摘要（前500字符，根据文件类型去除标签）
+if [[ "$FILE_PATH" == *.html ]]; then
+    # HTML文件：去除HTML标签
+    SUMMARY=$(echo "$CONTENT" | sed 's/<[^>]*>//g' | sed 's/&nbsp;/ /g' | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g' | tr '\n' ' ' | tr -s ' ' | cut -c1-500)
+else
+    # Markdown文件：去除markdown标记
+    SUMMARY=$(echo "$CONTENT" | sed 's/#//g' | sed 's/\*\*//g' | tr '\n' ' ' | cut -c1-500)
+fi
 
 # 生成文件名（用于向后兼容）
 FILE_NAME=$(basename "$FILE_PATH")
+
+# 判断文件类型，如果是HTML则同时填充content_html
+if [[ "$FILE_PATH" == *.html ]]; then
+    CONTENT_HTML=$(echo "$CONTENT" | jq -Rs '.')
+    CONTENT_MD="null"
+else
+    CONTENT_HTML="null"
+    CONTENT_MD=$(echo "$CONTENT" | jq -Rs '.')
+fi
 
 # 构建JSON
 JSON_DATA=$(cat <<EOF
@@ -184,7 +199,8 @@ JSON_DATA=$(cat <<EOF
     "title": $(echo "$TITLE" | jq -Rs '.'),
     "category": "$CATEGORY",
     "report_date": "$DATE",
-    "content_md": $(echo "$CONTENT" | jq -Rs '.'),
+    "content_md": $CONTENT_MD,
+    "content_html": $CONTENT_HTML,
     "summary": $(echo "$SUMMARY..." | jq -Rs '.'),
     "source": "gemini-deep-research",
     "author": "Friday AI",
