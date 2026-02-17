@@ -1,0 +1,471 @@
+#!/usr/bin/env python3
+"""
+相对估值工具 (Comparative Valuation)
+比较同行业公司的估值倍数 (PE, PB, PS, EV/EBITDA)
+"""
+
+import argparse
+import json
+import sys
+import os
+from dataclasses import dataclass, asdict
+from typing import Optional, List, Dict
+from datetime import datetime
+
+# 添加 investment 目录到路径
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'investment'))
+
+@dataclass
+class ValuationMetrics:
+    """估值指标数据类"""
+    symbol: str
+    name: str = ""
+    sector: str = ""
+    
+    # 价格数据
+    price: float = 0.0
+    currency: str = "USD"
+    market_cap: float = 0.0  # 百万美元
+    
+    # 估值倍数
+    pe_ttm: Optional[float] = None  # 市盈率 TTM
+    pe_forward: Optional[float] = None  # 预测市盈率
+    pb: Optional[float] = None  # 市净率
+    ps: Optional[float] = None  # 市销率
+    ev_ebitda: Optional[float] = None  # 企业价值/EBITDA
+    ev_revenue: Optional[float] = None  # 企业价值/收入
+    
+    # 盈利能力
+    eps_ttm: Optional[float] = None  # 每股收益 TTM
+    eps_growth: Optional[float] = None  # 盈利增长率
+    revenue_growth: Optional[float] = None  # 收入增长
+    roe: Optional[float] = None  # 净资产收益率
+    roa: Optional[float] = None  # 资产收益率
+    
+    # 其他指标
+    dividend_yield: Optional[float] = None  # 股息率
+    beta: Optional[float] = None  # Beta
+    
+    def to_dict(self) -> Dict:
+        return asdict(self)
+
+
+class ValuationDataSource:
+    """估值数据源基类"""
+    
+    def get_metrics(self, symbol: str) -> Optional[ValuationMetrics]:
+        raise NotImplementedError
+
+
+class YahooFinanceSource(ValuationDataSource):
+    """Yahoo Finance 数据源"""
+    
+    def __init__(self):
+        self.yf = None
+        try:
+            import yfinance as yf
+            self.yf = yf
+        except ImportError:
+            pass
+    
+    def get_metrics(self, symbol: str) -> Optional[ValuationMetrics]:
+        if not self.yf:
+            return None
+        
+        try:
+            ticker = self.yf.Ticker(symbol)
+            info = ticker.info
+            
+            if not info:
+                return None
+            
+            metrics = ValuationMetrics(
+                symbol=symbol,
+                name=info.get('longName', info.get('shortName', '')),
+                sector=info.get('sector', ''),
+                price=info.get('currentPrice', info.get('regularMarketPrice', 0)),
+                currency=info.get('currency', 'USD'),
+                market_cap=info.get('marketCap', 0) / 1e6,  # 转换为百万
+                
+                pe_ttm=info.get('trailingPE'),
+                pe_forward=info.get('forwardPE'),
+                pb=info.get('priceToBook'),
+                ps=info.get('priceToSalesTrailing12Months'),
+                ev_ebitda=info.get('enterpriseToEbitda'),
+                ev_revenue=info.get('enterpriseToRevenue'),
+                
+                eps_ttm=info.get('trailingEps'),
+                eps_growth=info.get('earningsGrowth'),
+                revenue_growth=info.get('revenueGrowth'),
+                roe=info.get('returnOnEquity'),
+                roa=info.get('returnOnAssets'),
+                
+                dividend_yield=info.get('dividendYield', 0) * 100 if info.get('dividendYield') else None,
+                beta=info.get('beta')
+            )
+            return metrics
+            
+        except Exception as e:
+            print(f"⚠️ Yahoo Finance 获取 {symbol} 失败: {e}")
+            return None
+
+
+class DemoSource(ValuationDataSource):
+    """演示数据源 - 生成模拟数据"""
+    
+    # 预定义的演示数据
+    DEMO_DATA = {
+        'MSFT': {
+            'name': 'Microsoft Corporation',
+            'sector': 'Technology',
+            'price': 415.82,
+            'market_cap': 3089000,
+            'pe_ttm': 34.5,
+            'pe_forward': 28.2,
+            'pb': 12.1,
+            'ps': 12.8,
+            'ev_ebitda': 24.5,
+            'eps_ttm': 12.05,
+            'eps_growth': 0.15,
+            'revenue_growth': 0.12,
+            'roe': 0.38,
+            'dividend_yield': 0.7,
+            'beta': 0.9
+        },
+        'AAPL': {
+            'name': 'Apple Inc.',
+            'sector': 'Technology',
+            'price': 228.02,
+            'market_cap': 3480000,
+            'pe_ttm': 32.8,
+            'pe_forward': 26.5,
+            'pb': 48.5,
+            'ps': 8.2,
+            'ev_ebitda': 22.1,
+            'eps_ttm': 6.95,
+            'eps_growth': 0.08,
+            'revenue_growth': 0.02,
+            'roe': 1.60,
+            'dividend_yield': 0.5,
+            'beta': 1.2
+        },
+        'GOOGL': {
+            'name': 'Alphabet Inc.',
+            'sector': 'Technology',
+            'price': 185.19,
+            'market_cap': 2280000,
+            'pe_ttm': 25.2,
+            'pe_forward': 21.8,
+            'pb': 6.8,
+            'ps': 6.1,
+            'ev_ebitda': 15.2,
+            'eps_ttm': 7.35,
+            'eps_growth': 0.25,
+            'revenue_growth': 0.15,
+            'roe': 0.31,
+            'dividend_yield': 0.4,
+            'beta': 1.05
+        },
+        'AMZN': {
+            'name': 'Amazon.com Inc.',
+            'sector': 'Consumer Cyclical',
+            'price': 228.50,
+            'market_cap': 2380000,
+            'pe_ttm': 58.5,
+            'pe_forward': 32.1,
+            'pb': 8.2,
+            'ps': 3.1,
+            'ev_ebitda': 18.5,
+            'eps_ttm': 3.91,
+            'eps_growth': 0.35,
+            'revenue_growth': 0.11,
+            'roe': 0.16,
+            'dividend_yield': None,
+            'beta': 1.15
+        },
+        'NVDA': {
+            'name': 'NVIDIA Corporation',
+            'sector': 'Technology',
+            'price': 138.25,
+            'market_cap': 3380000,
+            'pe_ttm': 65.8,
+            'pe_forward': 35.2,
+            'pb': 52.5,
+            'ps': 28.5,
+            'ev_ebitda': 55.2,
+            'eps_ttm': 2.10,
+            'eps_growth': 0.85,
+            'revenue_growth': 0.94,
+            'roe': 0.65,
+            'dividend_yield': 0.03,
+            'beta': 1.75
+        },
+        'META': {
+            'name': 'Meta Platforms Inc.',
+            'sector': 'Technology',
+            'price': 736.65,
+            'market_cap': 1880000,
+            'pe_ttm': 26.8,
+            'pe_forward': 22.5,
+            'pb': 8.5,
+            'ps': 9.8,
+            'ev_ebitda': 16.5,
+            'eps_ttm': 27.48,
+            'eps_growth': 0.35,
+            'revenue_growth': 0.20,
+            'roe': 0.32,
+            'dividend_yield': 0.4,
+            'beta': 1.15
+        },
+        'TSLA': {
+            'name': 'Tesla Inc.',
+            'sector': 'Consumer Cyclical',
+            'price': 355.84,
+            'market_cap': 1140000,
+            'pe_ttm': 172.5,
+            'pe_forward': 85.2,
+            'pb': 12.8,
+            'ps': 8.5,
+            'ev_ebitda': 52.5,
+            'eps_ttm': 2.06,
+            'eps_growth': 0.12,
+            'revenue_growth': 0.08,
+            'roe': 0.08,
+            'dividend_yield': None,
+            'beta': 2.05
+        }
+    }
+    
+    def get_metrics(self, symbol: str) -> Optional[ValuationMetrics]:
+        data = self.DEMO_DATA.get(symbol.upper())
+        if not data:
+            return None
+        
+        return ValuationMetrics(
+            symbol=symbol.upper(),
+            name=data['name'],
+            sector=data['sector'],
+            price=data['price'],
+            market_cap=data['market_cap'],
+            pe_ttm=data['pe_ttm'],
+            pe_forward=data['pe_forward'],
+            pb=data['pb'],
+            ps=data['ps'],
+            ev_ebitda=data['ev_ebitda'],
+            eps_ttm=data['eps_ttm'],
+            eps_growth=data['eps_growth'],
+            revenue_growth=data['revenue_growth'],
+            roe=data['roe'],
+            dividend_yield=data['dividend_yield'],
+            beta=data['beta']
+        )
+
+
+class ComparativeValuation:
+    """相对估值分析器"""
+    
+    def __init__(self, use_demo: bool = False):
+        if use_demo:
+            self.source = DemoSource()
+        else:
+            self.source = YahooFinanceSource()
+            if not self.source.yf:
+                print("⚠️ yfinance 未安装，切换到演示模式")
+                self.source = DemoSource()
+    
+    def analyze(self, symbols: List[str]) -> List[ValuationMetrics]:
+        """分析多个股票的估值指标"""
+        results = []
+        for symbol in symbols:
+            metrics = self.source.get_metrics(symbol)
+            if metrics:
+                results.append(metrics)
+        return results
+    
+    def compare(self, metrics_list: List[ValuationMetrics]) -> Dict:
+        """比较多只股票的估值指标"""
+        if not metrics_list:
+            return {}
+        
+        comparison = {
+            'symbols': [m.symbol for m in metrics_list],
+            'timestamp': datetime.now().isoformat(),
+            'averages': {},
+            'rankings': {},
+            'analysis': {}
+        }
+        
+        # 计算各指标的平均值
+        indicators = ['pe_ttm', 'pe_forward', 'pb', 'ps', 'ev_ebitda', 'eps_growth', 'revenue_growth', 'roe']
+        
+        for indicator in indicators:
+            values = [getattr(m, indicator) for m in metrics_list if getattr(m, indicator) is not None]
+            if values:
+                comparison['averages'][indicator] = {
+                    'mean': sum(values) / len(values),
+                    'median': sorted(values)[len(values) // 2],
+                    'min': min(values),
+                    'max': max(values)
+                }
+        
+        # 排名（PE 越低越好，Growth 越高越好）
+        pe_values = [(m.symbol, m.pe_ttm) for m in metrics_list if m.pe_ttm]
+        pe_values.sort(key=lambda x: x[1])
+        comparison['rankings']['pe_ttm'] = {s: i+1 for i, (s, _) in enumerate(pe_values)}
+        
+        growth_values = [(m.symbol, m.eps_growth) for m in metrics_list if m.eps_growth]
+        growth_values.sort(key=lambda x: x[1], reverse=True)
+        comparison['rankings']['eps_growth'] = {s: i+1 for i, (s, _) in enumerate(growth_values)}
+        
+        return comparison
+
+
+def format_value(value: Optional[float], suffix: str = '', decimals: int = 2) -> str:
+    """格式化数值输出"""
+    if value is None:
+        return 'N/A'
+    if abs(value) >= 1000:
+        return f'{value:,.0f}{suffix}'
+    return f'{value:.{decimals}f}{suffix}'
+
+
+def format_percent(value: Optional[float]) -> str:
+    """格式化百分比"""
+    if value is None:
+        return 'N/A'
+    return f'{value*100:.1f}%'
+
+
+def print_text_report(metrics_list: List[ValuationMetrics], comparison: Dict):
+    """打印文本格式报告"""
+    print("=" * 90)
+    print("📊 相对估值分析报告")
+    print("=" * 90)
+    print(f"分析时间: {comparison.get('timestamp', datetime.now().isoformat())}")
+    print()
+    
+    # 估值倍数表格
+    print("【估值倍数对比】")
+    print("-" * 90)
+    print(f"{'股票':<8} {'价格':>10} {'市值(B)':>12} {'PE(TTM)':>10} {'PE(Fwd)':>10} {'PB':>8} {'PS':>8} {'EV/EBITDA':>10}")
+    print("-" * 90)
+    
+    for m in metrics_list:
+        market_cap_b = m.market_cap / 1000 if m.market_cap else 0
+        print(f"{m.symbol:<8} {m.price:>10.2f} {market_cap_b:>11.1f}B {format_value(m.pe_ttm):>10} {format_value(m.pe_forward):>10} {format_value(m.pb):>8} {format_value(m.ps):>8} {format_value(m.ev_ebitda):>10}")
+    
+    # 平均值
+    if comparison.get('averages'):
+        print("-" * 90)
+        avg = comparison['averages']
+        print(f"{'平均值':<8} {'':>10} {'':>12} {format_value(avg.get('pe_ttm', {}).get('mean')):>10} {format_value(avg.get('pe_forward', {}).get('mean')):>10} {format_value(avg.get('pb', {}).get('mean')):>8} {format_value(avg.get('ps', {}).get('mean')):>8} {format_value(avg.get('ev_ebitda', {}).get('mean')):>10}")
+    print()
+    
+    # 成长性指标
+    print("【成长性指标】")
+    print("-" * 70)
+    print(f"{'股票':<8} {'EPS(TTM)':>12} {'EPS增长':>12} {'收入增长':>12} {'ROE':>10} {'股息率':>10}")
+    print("-" * 70)
+    
+    for m in metrics_list:
+        print(f"{m.symbol:<8} {format_value(m.eps_ttm):>12} {format_percent(m.eps_growth):>12} {format_percent(m.revenue_growth):>12} {format_percent(m.roe):>10} {format_value(m.dividend_yield, '%'):>10}")
+    
+    if comparison.get('averages'):
+        print("-" * 70)
+        avg = comparison['averages']
+        print(f"{'平均值':<8} {'':>12} {format_percent(avg.get('eps_growth', {}).get('mean')):>12} {format_percent(avg.get('revenue_growth', {}).get('mean')):>12} {format_percent(avg.get('roe', {}).get('mean')):>10} {'':>10}")
+    print()
+    
+    # 估值解读
+    print("【估值解读】")
+    print("-" * 70)
+    
+    for m in metrics_list:
+        interpretations = []
+        
+        # PE 评价
+        if m.pe_ttm:
+            avg_pe = comparison.get('averages', {}).get('pe_ttm', {}).get('mean', m.pe_ttm)
+            if m.pe_ttm < avg_pe * 0.8:
+                interpretations.append(f"PE偏低({m.pe_ttm:.1f}x)")
+            elif m.pe_ttm > avg_pe * 1.2:
+                interpretations.append(f"PE偏高({m.pe_ttm:.1f}x)")
+        
+        # 增长评价
+        if m.eps_growth:
+            if m.eps_growth > 0.30:
+                interpretations.append(f"高增长({m.eps_growth*100:.0f}%)")
+            elif m.eps_growth < 0.05:
+                interpretations.append(f"增长缓慢({m.eps_growth*100:.0f}%)")
+        
+        # PEG 评价
+        if m.pe_ttm and m.eps_growth and m.eps_growth > 0:
+            peg = m.pe_ttm / (m.eps_growth * 100)
+            if peg < 1:
+                interpretations.append(f"PEG<1(低估)")
+            elif peg > 2:
+                interpretations.append(f"PEG>2(高估)")
+        
+        interp_str = " | ".join(interpretations) if interpretations else "正常区间"
+        print(f"{m.symbol:<8} {interp_str}")
+    
+    print()
+    print("=" * 90)
+
+
+def main():
+    parser = argparse.ArgumentParser(description='相对估值分析工具')
+    parser.add_argument('--symbols', '-s', required=True, help='股票代码，逗号分隔 (如: MSFT,AAPL,GOOGL)')
+    parser.add_argument('--demo', action='store_true', help='使用演示模式')
+    parser.add_argument('--output', '-o', choices=['text', 'json'], default='text', help='输出格式')
+    parser.add_argument('--save', help='保存结果到文件')
+    
+    args = parser.parse_args()
+    
+    # 解析股票代码
+    symbols = [s.strip().upper() for s in args.symbols.split(',')]
+    
+    # 创建分析器
+    analyzer = ComparativeValuation(use_demo=args.demo)
+    
+    # 获取数据
+    print(f"正在获取 {len(symbols)} 只股票的估值数据...")
+    metrics_list = analyzer.analyze(symbols)
+    
+    if not metrics_list:
+        print("❌ 未能获取任何股票数据")
+        sys.exit(1)
+    
+    print(f"✅ 成功获取 {len(metrics_list)} 只股票数据")
+    
+    # 对比分析
+    comparison = analyzer.compare(metrics_list)
+    
+    # 输出结果
+    if args.output == 'json':
+        result = {
+            'metrics': [m.to_dict() for m in metrics_list],
+            'comparison': comparison
+        }
+        output = json.dumps(result, indent=2, ensure_ascii=False)
+        print(output)
+        
+        if args.save:
+            with open(args.save, 'w', encoding='utf-8') as f:
+                f.write(output)
+            print(f"\n💾 结果已保存到: {args.save}")
+    else:
+        print_text_report(metrics_list, comparison)
+        
+        if args.save:
+            result = {
+                'metrics': [m.to_dict() for m in metrics_list],
+                'comparison': comparison
+            }
+            with open(args.save, 'w', encoding='utf-8') as f:
+                json.dump(result, f, indent=2, ensure_ascii=False)
+            print(f"💾 结果已保存到: {args.save}")
+
+
+if __name__ == '__main__':
+    main()
