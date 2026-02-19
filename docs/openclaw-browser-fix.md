@@ -33,12 +33,30 @@ tail -20 /tmp/openclaw-browser-fix.log
 3. 创建 AppleScript 自动点击 Chrome 扩展图标
 4. 配置定时任务检查连接状态
 
-### 方案三：使用 headless 浏览器（备选）
+### 方案三：使用 headless 浏览器（已验证可用 ✅）
 
-如果需要完全自动化，可以考虑：
-- 使用 Playwright 或 Puppeteer 启动 headless Chrome
-- 避免扩展连接问题
-- 但需要单独配置和测试
+**状态**: 已验证可用，且已自动登录
+
+**使用方法**:
+```bash
+# 启动 headless 浏览器
+browser start profile=openclaw
+
+# 获取标签页
+browser tabs
+
+# 导航到 Gemini
+browser navigate targetId=<targetId> targetUrl=https://gemini.google.com/app
+```
+
+**优点**:
+- ✅ 无需 Chrome 扩展
+- ✅ 无需手动点击连接
+- ✅ 已自动复用 Chrome 登录状态
+- ✅ 完全自动化
+
+**验证结果**:
+- 2026-02-19: 测试成功，已显示 Google 账号登录状态
 
 ## 注意事项
 
