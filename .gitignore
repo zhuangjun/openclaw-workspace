@@ -3,3 +3,37 @@ tmp/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Sensitive files - Environment variables and API keys
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# OpenClaw auth files
+auth-profiles.json
+**/auth-profiles.json
+
+# Secrets and credentials
+*.pem
+*.key
+secrets.json
+credentials.json
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+log/
+
+# OS files
+Thumbs.db
+.DS_Store?
