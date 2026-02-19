@@ -195,6 +195,12 @@ export FRIDAY_API_TOKEN="dev-token-change-in-production"
 
 ## 示例提示词模板
 
+### 戴维斯双击扫描（简化版）
+```
+寻找美股和港股中戴维斯双击的股票。
+```
+*Gemini Deep Research 会自动分析盈利增长和估值扩张的潜力标的。*
+
 ### 投资分析模板
 ```
 请对 [股票代码] 进行全面的投资深度研究。分析维度包括：

@@ -1,0 +1,19 @@
+[
+  {
+    "date": "2026-02-19",
+    "time": "08:05:00",
+    "symbol": "9988.HK",
+    "name": "阿里巴巴",
+    "action": "卖出",
+    "shares": 300,
+    "price": 154.7,
+    "currency": "HKD",
+    "amount_cny": 41000,
+    "reason": "部分止盈，涨幅82%超过20-30%止盈线",
+    "pnl_pct": 82.0,
+    "remaining_shares": 300,
+    "portfolio_ratio_before": 9.3,
+    "portfolio_ratio_after": 4.7,
+    "cash_after": 188595
+  }
+]

@@ -1,0 +1,265 @@
+#!/usr/bin/env python3
+"""
+Financial Modeling Prep 财报分析工具
+支持获取利润表、资产负债表、现金流量表及关键财务指标
+"""
+import requests
+import json
+import sys
+import os
+from datetime import datetime
+
+# API配置
+FMP_BASE_URL = "https://financialmodelingprep.com/api/v3"
+API_KEY = os.environ.get("FMP_API_KEY", "demo")  # 优先从环境变量读取
+
+class FinancialAnalyzer:
+    """财报分析器"""
+    
+    def __init__(self, api_key=None):
+        self.api_key = api_key or API_KEY
+        self.base_url = FMP_BASE_URL
+    
+    def _make_request(self, endpoint, params=None):
+        """发送API请求"""
+        url = f"{self.base_url}/{endpoint}"
+        params = params or {}
+        params["apikey"] = self.api_key
+        
+        try:
+            response = requests.get(url, params=params, timeout=30)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"❌ 请求失败: {e}")
+            return None
+    
+    def get_income_statement(self, symbol, period="annual", limit=5):
+        """获取利润表"""
+        endpoint = f"income-statement/{symbol}"
+        params = {"period": period, "limit": limit}
+        return self._make_request(endpoint, params)
+    
+    def get_balance_sheet(self, symbol, period="annual", limit=5):
+        """获取资产负债表"""
+        endpoint = f"balance-sheet-statement/{symbol}"
+        params = {"period": period, "limit": limit}
+        return self._make_request(endpoint, params)
+    
+    def get_cash_flow(self, symbol, period="annual", limit=5):
+        """获取现金流量表"""
+        endpoint = f"cash-flow-statement/{symbol}"
+        params = {"period": period, "limit": limit}
+        return self._make_request(endpoint, params)
+    
+    def get_financial_ratios(self, symbol, limit=5):
+        """获取财务比率"""
+        endpoint = f"ratios/{symbol}"
+        params = {"limit": limit}
+        return self._make_request(endpoint, params)
+    
+    def get_key_metrics(self, symbol, limit=5):
+        """获取关键指标"""
+        endpoint = f"key-metrics/{symbol}"
+        params = {"limit": limit}
+        return self._make_request(endpoint, params)
+    
+    def get_company_profile(self, symbol):
+        """获取公司资料"""
+        endpoint = f"profile/{symbol}"
+        return self._make_request(endpoint)
+    
+    def format_currency(self, value, unit="auto"):
+        """格式化货币"""
+        if value is None:
+            return "N/A"
+        
+        if unit == "auto":
+            if abs(value) >= 1e12:
+                return f"${value/1e12:.2f}T"
+            elif abs(value) >= 1e9:
+                return f"${value/1e9:.2f}B"
+            elif abs(value) >= 1e6:
+                return f"${value/1e6:.2f}M"
+            else:
+                return f"${value:,.0f}"
+        elif unit == "B":
+            return f"${value/1e9:.2f}B"
+        elif unit == "M":
+            return f"${value/1e6:.2f}M"
+        return f"${value:,.0f}"
+    
+    def analyze_financial_health(self, symbol):
+        """综合分析财务健康状况"""
+        print(f"\n{'='*70}")
+        print(f"📊 {symbol} 财报分析报告")
+        print(f"{'='*70}")
+        
+        # 获取公司资料
+        profile = self.get_company_profile(symbol)
+        if profile and len(profile) > 0:
+            p = profile[0]
+            print(f"\n【公司信息】")
+            print(f"  名称: {p.get('companyName', 'N/A')}")
+            print(f"  行业: {p.get('industry', 'N/A')}")
+            print(f"  板块: {p.get('sector', 'N/A')}")
+            print(f"  市值: {self.format_currency(p.get('mktCap'))}")
+            print(f"  员工: {p.get('fullTimeEmployees', 'N/A'):,}" if p.get('fullTimeEmployees') else "  员工: N/A")
+            print(f"  官网: {p.get('website', 'N/A')}")
+        
+        # 获取利润表
+        income = self.get_income_statement(symbol, limit=4)
+        if income and len(income) > 0:
+            print(f"\n【利润表分析】")
+            print(f"{'年份':<10} {'营收':<15} {'毛利':<15} {'营业利润':<15} {'净利润':<15}")
+            print(f"{'-'*70}")
+            
+            for item in income[:4]:
+                date = item.get('date', 'N/A')[:4]
+                revenue = self.format_currency(item.get('revenue'))
+                gross_profit = self.format_currency(item.get('grossProfit'))
+                operating_income = self.format_currency(item.get('operatingIncome'))
+                net_income = self.format_currency(item.get('netIncome'))
+                print(f"{date:<10} {revenue:<15} {gross_profit:<15} {operating_income:<15} {net_income:<15}")
+            
+            # 计算同比增长
+            if len(income) >= 2:
+                latest = income[0]
+                previous = income[1]
+                revenue_growth = ((latest.get('revenue', 0) - previous.get('revenue', 0)) / previous.get('revenue', 1)) * 100
+                net_income_growth = ((latest.get('netIncome', 0) - previous.get('netIncome', 0)) / previous.get('netIncome', 1)) * 100
+                print(f"\n  营收同比: {'+' if revenue_growth >= 0 else ''}{revenue_growth:.1f}%")
+                print(f"  净利同比: {'+' if net_income_growth >= 0 else ''}{net_income_growth:.1f}%")
+        
+        # 获取资产负债表
+        balance = self.get_balance_sheet(symbol, limit=2)
+        if balance and len(balance) > 0:
+            print(f"\n【资产负债表关键指标】")
+            latest = balance[0]
+            print(f"  总资产: {self.format_currency(latest.get('totalAssets'))}")
+            print(f"  总负债: {self.format_currency(latest.get('totalLiabilities'))}")
+            print(f"  股东权益: {self.format_currency(latest.get('totalStockholdersEquity'))}")
+            
+            # 计算资产负债率
+            total_assets = latest.get('totalAssets', 0)
+            total_liabilities = latest.get('totalLiabilities', 0)
+            if total_assets > 0:
+                debt_ratio = (total_liabilities / total_assets) * 100
+                print(f"  资产负债率: {debt_ratio:.1f}%")
+            
+            # 流动比率
+            current_assets = latest.get('totalCurrentAssets', 0)
+            current_liabilities = latest.get('totalCurrentLiabilities', 0)
+            if current_liabilities > 0:
+                current_ratio = current_assets / current_liabilities
+                print(f"  流动比率: {current_ratio:.2f}")
+        
+        # 获取现金流量表
+        cashflow = self.get_cash_flow(symbol, limit=2)
+        if cashflow and len(cashflow) > 0:
+            print(f"\n【现金流量表】")
+            latest = cashflow[0]
+            print(f"  经营活动现金流: {self.format_currency(latest.get('operatingCashFlow'))}")
+            print(f"  投资活动现金流: {self.format_currency(latest.get('investingCashFlow'))}")
+            print(f"  筹资活动现金流: {self.format_currency(latest.get('financingCashFlow'))}")
+            print(f"  自由现金流: {self.format_currency(latest.get('freeCashFlow'))}")
+            
+            # 计算现金流质量
+            operating_cf = latest.get('operatingCashFlow', 0)
+            net_income = income[0].get('netIncome', 1) if income else 1
+            if net_income > 0:
+                cf_quality = operating_cf / net_income
+                print(f"  现金流/净利润比率: {cf_quality:.2f}")
+        
+        # 获取财务比率
+        ratios = self.get_financial_ratios(symbol, limit=2)
+        if ratios and len(ratios) > 0:
+            print(f"\n【财务比率】")
+            latest = ratios[0]
+            print(f"  ROE (净资产收益率): {latest.get('returnOnEquity', 0)*100:.1f}%")
+            print(f"  ROA (总资产收益率): {latest.get('returnOnAssets', 0)*100:.1f}%")
+            print(f"  毛利率: {latest.get('grossProfitMargin', 0)*100:.1f}%")
+            print(f"  营业利润率: {latest.get('operatingProfitMargin', 0)*100:.1f}%")
+            print(f"  净利润率: {latest.get('netProfitMargin', 0)*100:.1f}%")
+        
+        # 获取关键指标
+        metrics = self.get_key_metrics(symbol, limit=2)
+        if metrics and len(metrics) > 0:
+            print(f"\n【估值指标】")
+            latest = metrics[0]
+            print(f"  P/E (市盈率): {latest.get('peRatio', 'N/A')}")
+            print(f"  P/B (市净率): {latest.get('pbRatio', 'N/A')}")
+            print(f"  EV/EBITDA: {latest.get('enterpriseValueOverEBITDA', 'N/A')}")
+            print(f"  股息率: {latest.get('dividendYield', 0)*100:.2f}%" if latest.get('dividendYield') else "  股息率: N/A")
+        
+        print(f"\n{'='*70}")
+        print(f"✅ {symbol} 分析完成 | 数据来源: Financial Modeling Prep")
+        print(f"{'='*70}\n")
+
+
+def main():
+    """主函数"""
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='财报分析工具 - Financial Modeling Prep')
+    parser.add_argument('symbol', help='股票代码 (如: AAPL, MSFT)')
+    parser.add_argument('--api-key', help='FMP API Key (默认从环境变量FMP_API_KEY读取)')
+    parser.add_argument('--period', choices=['annual', 'quarter'], default='annual', help='报告周期')
+    parser.add_argument('--json', action='store_true', help='以JSON格式输出')
+    parser.add_argument('--save', help='保存结果到文件')
+    
+    args = parser.parse_args()
+    
+    # 检查API Key
+    api_key = args.api_key or os.environ.get("FMP_API_KEY")
+    if not api_key or api_key == "demo":
+        print("⚠️  警告: 使用demo API Key，数据可能受限")
+        print("  请设置环境变量 FMP_API_KEY 或传入 --api-key 参数")
+        print("  获取免费API Key: https://financialmodelingprep.com/developer/docs")
+        print()
+    
+    # 创建分析器
+    analyzer = FinancialAnalyzer(api_key)
+    
+    if args.json:
+        # JSON输出模式
+        result = {
+            "symbol": args.symbol,
+            "timestamp": datetime.now().isoformat(),
+            "income_statement": analyzer.get_income_statement(args.symbol, args.period),
+            "balance_sheet": analyzer.get_balance_sheet(args.symbol, args.period),
+            "cash_flow": analyzer.get_cash_flow(args.symbol, args.period),
+            "ratios": analyzer.get_financial_ratios(args.symbol),
+            "metrics": analyzer.get_key_metrics(args.symbol)
+        }
+        
+        json_output = json.dumps(result, indent=2, default=str)
+        
+        if args.save:
+            with open(args.save, 'w') as f:
+                f.write(json_output)
+            print(f"✅ 数据已保存到: {args.save}")
+        else:
+            print(json_output)
+    else:
+        # 标准分析模式
+        analyzer.analyze_financial_health(args.symbol)
+        
+        if args.save:
+            # 同时保存JSON
+            result = {
+                "symbol": args.symbol,
+                "timestamp": datetime.now().isoformat(),
+                "income_statement": analyzer.get_income_statement(args.symbol, args.period),
+                "balance_sheet": analyzer.get_balance_sheet(args.symbol, args.period),
+                "cash_flow": analyzer.get_cash_flow(args.symbol, args.period),
+                "ratios": analyzer.get_financial_ratios(args.symbol),
+                "metrics": analyzer.get_key_metrics(args.symbol)
+            }
+            with open(args.save, 'w') as f:
+                json.dump(result, f, indent=2, default=str)
+            print(f"✅ 数据已保存到: {args.save}")
+
+
+if __name__ == "__main__":
+    main()

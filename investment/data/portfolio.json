@@ -1,8 +1,8 @@
 {
   "summary": {
     "initial_capital": 1000000,
-    "current_value": 886633.8,
-    "total_return": -113366.2,
+    "current_value": 881112.55,
+    "total_return": -118887.45,
     "start_date": "2026-02-09",
     "target_annual_return": 20,
     "strategy": "大仓稳健，小仓爆发，攻守兼备",
@@ -10,20 +10,20 @@
     "price_source": "LongPort API + CoinMarketCap",
     "adjusted_to_target": true,
     "adjustment_note": "Cash adjusted by ¥4,095 to reach target ¥1,000,000",
-    "last_updated": "2026-02-15T08:04:21.791918",
-    "update_note": "执行交易决策检查，新增3笔交易",
-    "total_return_pct": -11.34,
+    "last_updated": "2026-02-19T08:05:00.000000",
+    "update_note": "执行交易决策：9988.HK部分止盈，卖出300股回收¥41,000",
+    "total_return_pct": -11.89,
     "fx_rates": {
       "USD_CNY": 6.91,
       "HKD_CNY": 0.8836,
-      "last_updated": "2026-02-15"
+      "last_updated": "2026-02-18"
     }
   },
   "allocation": {
     "core_large": {
       "name": "核心-大仓稳健",
       "target_ratio": "40-50%",
-      "current_ratio": 39.12,
+      "current_ratio": 38.78,
       "color": "#238636",
       "positions": [
         {
@@ -35,11 +35,11 @@
           "cost": 401.14,
           "currency": "USD",
           "cost_source": "Yahoo Finance",
-          "current_price": 401.32,
-          "market_value": 194118.48,
-          "pnl": 87.07,
-          "pnl_pct": 0.04,
-          "last_updated": "2026-02-15T08:04:21.791685"
+          "current_price": 399.6,
+          "market_value": 193286.52,
+          "pnl": -744.9,
+          "pnl_pct": -0.38,
+          "last_updated": "2026-02-19T08:00:12.797468"
         },
         {
           "symbol": "TSLA",
@@ -50,11 +50,11 @@
           "cost": 411.11,
           "currency": "USD",
           "cost_source": "Yahoo Finance",
-          "current_price": 417.44,
-          "market_value": 144225.52,
-          "pnl": 2187.01,
-          "pnl_pct": 1.54,
-          "last_updated": "2026-02-15T08:04:21.791744"
+          "current_price": 411.32,
+          "market_value": 142111.06,
+          "pnl": 72.55,
+          "pnl_pct": 0.05,
+          "last_updated": "2026-02-19T08:00:12.797523"
         },
         {
           "symbol": "GOOGL",
@@ -65,19 +65,19 @@
           "cost": 322.86,
           "currency": "USD",
           "cost_source": "Yahoo Finance",
-          "current_price": 305.72,
-          "market_value": 52813.13,
-          "pnl": -2960.93,
-          "pnl_pct": -5.31,
-          "last_updated": "2026-02-15T08:04:21.791768"
+          "current_price": 303.33,
+          "market_value": 52400.26,
+          "pnl": -3373.81,
+          "pnl_pct": -6.05,
+          "last_updated": "2026-02-19T08:00:12.797545"
         }
       ],
-      "current_value": 391157.13
+      "current_value": 387797.84
     },
     "satellite": {
       "name": "卫星-小仓爆发",
       "target_ratio": "15-20%",
-      "current_ratio": 22.55,
+      "current_ratio": 22.38,
       "color": "#f0883e",
       "positions": [
         {
@@ -91,12 +91,12 @@
           "unit": "枚",
           "cost_source": "Yahoo Finance",
           "note": "含本次加仓0.08枚",
-          "current_price": 68860.66,
-          "market_value": 95165.43,
-          "pnl": -14425.61,
-          "pnl_pct": -13.16,
-          "change_24h": 3.97,
-          "last_updated": "2026-02-14T08:00:22.603224"
+          "current_price": 67506.58,
+          "market_value": 93294.09,
+          "pnl": -16296.95,
+          "pnl_pct": -14.87,
+          "change_24h": -2.01,
+          "last_updated": "2026-02-18T08:45:32.158559"
         },
         {
           "symbol": "NVDA",
@@ -107,11 +107,11 @@
           "cost": 185.41,
           "currency": "USD",
           "cost_source": "Yahoo Finance",
-          "current_price": 182.81,
-          "market_value": 18948.26,
-          "pnl": -269.49,
-          "pnl_pct": -1.4,
-          "last_updated": "2026-02-15T08:04:21.791786"
+          "current_price": 187.98,
+          "market_value": 19484.13,
+          "pnl": 266.38,
+          "pnl_pct": 1.39,
+          "last_updated": "2026-02-19T08:00:12.797562"
         },
         {
           "symbol": "3690.HK",
@@ -122,35 +122,35 @@
           "cost": 91.35,
           "currency": "HKD",
           "cost_source": "Yahoo Finance",
-          "current_price": 82.15,
-          "market_value": 29036.14,
-          "pnl": -3251.76,
-          "pnl_pct": -10.07,
-          "last_updated": "2026-02-15T08:04:21.791807"
+          "current_price": 82.05,
+          "market_value": 29000.79,
+          "pnl": -3287.11,
+          "pnl_pct": -10.18,
+          "last_updated": "2026-02-19T08:00:12.797578"
         },
         {
           "symbol": "9988.HK",
           "name": "阿里巴巴",
-          "value": 44000,
-          "ratio": 4.4,
-          "shares": 600,
+          "value": 22000,
+          "ratio": 2.2,
+          "shares": 300,
           "cost": 85.0,
           "currency": "HKD",
           "cost_source": "Yahoo Finance",
-          "note": "本次新建仓",
-          "current_price": 155.4,
-          "market_value": 82389.82,
-          "pnl": 37324.6,
-          "pnl_pct": 82.82,
-          "last_updated": "2026-02-15T08:04:21.791822"
+          "note": "部分止盈，卖出300股",
+          "current_price": 154.7,
+          "market_value": 41009.35,
+          "pnl": 18476.74,
+          "pnl_pct": 82.0,
+          "last_updated": "2026-02-19T08:05:00.000000"
         }
       ],
-      "current_value": 225539.65
+      "current_value": 223797.71
     },
     "defensive": {
       "name": "防守型-抗跌",
       "target_ratio": "15-20%",
-      "current_ratio": 21.75,
+      "current_ratio": 21.52,
       "color": "#8957e5",
       "positions": [
         {
@@ -163,11 +163,11 @@
           "currency": "USD",
           "cost_source": "Yahoo Finance",
           "note": "含本次加仓25股，摊薄后成本",
-          "current_price": 462.62,
-          "market_value": 191802.25,
-          "pnl": 3648.48,
-          "pnl_pct": 1.94,
-          "last_updated": "2026-02-15T08:04:21.791839"
+          "current_price": 458.28,
+          "market_value": 190002.89,
+          "pnl": 1849.12,
+          "pnl_pct": 0.98,
+          "last_updated": "2026-02-19T08:00:12.797610"
         },
         {
           "symbol": "XLU",
@@ -178,22 +178,22 @@
           "cost": 43.35,
           "currency": "USD",
           "cost_source": "Yahoo Finance",
-          "current_price": 46.5,
-          "market_value": 25705.2,
-          "pnl": 1741.32,
-          "pnl_pct": 7.27,
-          "last_updated": "2026-02-15T08:04:21.791856"
+          "current_price": 45.61,
+          "market_value": 25213.21,
+          "pnl": 1249.33,
+          "pnl_pct": 5.21,
+          "last_updated": "2026-02-19T08:00:12.797623"
         }
       ],
-      "current_value": 217507.45
+      "current_value": 215216.1
     },
     "cash": {
       "name": "现金储备",
       "target_ratio": "15-25%",
-      "current_ratio": 14.76,
+      "current_ratio": 18.9,
       "color": "#6e7681",
-      "value": 147595,
-      "note": "本次配置后剩余现金"
+      "value": 188595,
+      "note": "卖出9988.HK 300股后现金"
     }
   },
   "pending_trades": [
@@ -238,6 +238,13 @@
       "action": "加仓",
       "shares": 0.08,
       "amount": 55000
+    },
+    {
+      "symbol": "9988.HK",
+      "action": "卖出",
+      "shares": 300,
+      "amount": 41000,
+      "reason": "部分止盈，涨幅82%超过目标"
     }
   ],
   "risk_management": {
