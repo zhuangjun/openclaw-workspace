@@ -19,22 +19,56 @@ description: 使用 Gemini Deep Research 进行深度研究。当用户需要进
 
 1. **Chrome 扩展状态**: 确保 OpenClaw Browser Relay 扩展显示 **"ON"**
 2. **Gemini 订阅**: 用户需要已订阅 Gemini Advanced
-3. **浏览器控制**: 使用 `profile="chrome"`
+3. **浏览器控制**: 优先使用 `profile="chrome"`，如失败则使用 `profile="openclaw"`
+
+## 浏览器方案选择（重要）
+
+### 方案优先级
+
+| 优先级 | 方案 | Profile | 适用场景 |
+|--------|------|---------|---------|
+| 1 | Chrome Relay（优先） | `profile="chrome"` | 扩展显示 ON 且已连接 |
+| 2 | Headless（备用） | `profile="openclaw"` | Chrome 扩展未连接或失败 |
+
+### 自动检测逻辑
+
+执行以下检测逻辑选择浏览器方案：
+
+```
+1. 尝试启动 Chrome Relay: browser start profile=chrome
+2. 如果成功，使用 Chrome Relay 方案
+3. 如果失败（扩展未连接），自动切换到 Headless: browser start profile=openclaw
+4. Headless 方案已自动登录，可直接使用
+```
+
+### Chrome Relay 失败判断
+
+以下情况视为 Chrome Relay 失败，需切换到 Headless：
+- `browser start profile=chrome` 返回错误
+- 提示 "no tab is connected"
+- 提示 "Chrome extension relay is running, but no tab is connected"
 
 ## 标准执行流程
 
-执行以下 10 步流程：
+执行以下流程，优先使用 Chrome Relay，失败时自动切换到 Headless：
 
-### 步骤 1: 启动浏览器控制
+### 步骤 1: 启动浏览器（自动选择方案）
+
+**优先尝试 Chrome Relay：**
 ```
 browser start profile=chrome
+```
+
+**如果失败，自动切换到 Headless：**
+```
+browser start profile=openclaw
 ```
 
 ### 步骤 2: 获取标签页
 ```
 browser tabs
 ```
-获取 targetId，通常是第一个标签页的 `C2BFBDDFE4D9303ED8D369CC6E3DEC03`
+获取 targetId
 
 ### 步骤 3: 导航到 Gemini
 ```
@@ -96,10 +130,17 @@ browser act targetId=<targetId> request={"kind":"click","ref":"e346","slowly":tr
 
 ## 异常处理
 
-### 扩展未连接
-如果 browser start 失败或提示"no tab is connected"：
-1. 通知用户："请确认 Chrome 扩展显示 ON"
-2. 等待用户确认后再继续
+### Chrome Relay 扩展未连接
+如果 `browser start profile=chrome` 失败或提示"no tab is connected"：
+1. **自动切换到 Headless 方案**
+2. 执行 `browser start profile=openclaw`
+3. 继续后续步骤
+
+### Headless 方案说明
+- 使用 `profile=openclaw` 启动独立浏览器实例
+- 已自动复用 Chrome 登录状态，无需手动登录
+- 无需 Chrome 扩展，无需手动点击连接
+- 完全自动化，适合定时任务
 
 ### 元素 ref 变化
 如果点击失败，使用 `browser snapshot` 重新获取当前页面状态，查找正确的 ref。
@@ -228,3 +269,4 @@ export FRIDAY_API_TOKEN="dev-token-change-in-production"
 ## 参见
 
 - 详细工作流指南: [references/workflow-guide.md](references/workflow-guide.md)
+- Headless 方案文档: [docs/openclaw-browser-fix.md](../docs/openclaw-browser-fix.md)

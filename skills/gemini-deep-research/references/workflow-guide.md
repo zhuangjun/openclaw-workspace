@@ -2,9 +2,11 @@
 
 ## 完整执行流程（逐步详解）
 
-### 阶段 1: 准备和连接
+### 阶段 1: 准备和连接（自动选择浏览器方案）
 
-#### 1.1 启动浏览器控制
+#### 1.1 启动浏览器控制（优先 Chrome Relay，失败自动切换 Headless）
+
+**第一步：尝试 Chrome Relay（优先方案）**
 ```bash
 browser start profile=chrome
 ```
@@ -21,10 +23,28 @@ browser start profile=chrome
 }
 ```
 
-**失败处理：**
-如果返回错误如 "no tab is connected"，说明 Chrome 扩展未连接：
-1. 提示用户检查扩展是否显示 "ON"
-2. 等待用户确认后再重试
+**失败时自动切换到 Headless（备用方案）：**
+```bash
+browser start profile=openclaw
+```
+
+**失败判断条件：**
+- 返回错误 "no tab is connected"
+- 返回错误 "Chrome extension relay is running, but no tab is connected"
+- 任何其他启动失败
+
+**自动切换逻辑：**
+```
+if chrome_start_failed:
+    browser start profile=openclaw
+    continue_workflow()
+```
+
+**Headless 方案特点：**
+- 无需 Chrome 扩展
+- 无需手动点击连接
+- 已自动登录（复用 Chrome 登录状态）
+- 适合定时任务自动化
 
 #### 1.2 获取标签页列表
 ```bash
